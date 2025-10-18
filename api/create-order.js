@@ -17,8 +17,9 @@ async function generateAccessToken() {
 
 // Hàm chính xử lý yêu cầu
 module.exports = async (req, res) => {
+    console.log("PAYPAL_CLIENT_ID from env:", process.env.PAYPAL_CLIENT_ID);
+    console.log("PAYPAL_CLIENT_SECRET from env:", process.env.PAYPAL_CLIENT_SECRET ? "SECRET IS SET" : "SECRET IS UNDEFINED OR EMPTY");
     if (req.method !== 'POST') return res.status(405).end();
-
     try {
         const { cart } = req.body;
         const accessToken = await generateAccessToken();
