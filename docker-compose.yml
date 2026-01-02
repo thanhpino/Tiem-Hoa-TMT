@@ -1,0 +1,22 @@
+services:
+  flower_shop_db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: mssql_flower_shop
+    #linux
+    environment:
+      - ACCEPT_EULA=Y
+      #Password
+      - MSSQL_SA_PASSWORD=${DB_PASSWORD}
+    ports:
+      - "1434:1433" 
+    volumes:
+      - sql_data:/var/opt/mssql 
+    networks:
+      - flower-network
+
+volumes:
+  sql_data:
+
+networks:
+  flower-network:
+    driver: bridge
