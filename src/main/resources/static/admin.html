@@ -58,7 +58,7 @@
         .badge-paid { background: #dcfce7; color: #166534; }
         .badge-cancel { background: #fee2e2; color: #991b1b; }
 
-        /* Rank Badges - Mới thêm */
+        /* Rank Badges */
         .rank-badge { padding: 6px 12px; border-radius: 20px; font-weight: bold; font-size: 12px; display: inline-flex; align-items: center; gap: 5px; }
         .rank-bronze { background: #fff7ed; color: #9a3412; border: 1px solid #fdba74; }
         .rank-silver { background: #f8fafc; color: #475569; border: 1px solid #cbd5e1; }
@@ -71,14 +71,46 @@
         .btn-danger { background: #ef4444; color: white; padding: 6px 12px; font-size: 12px; }
         .btn:hover { opacity: 0.9; }
 
-        /* Modal (Popup thêm sản phẩm) */
+        /* Modal */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center; z-index: 1000; }
         .modal-content { background: white; padding: 25px; border-radius: 15px; width: 400px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
         .form-group { margin-bottom: 15px; }
         .form-group label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; }
         .form-group input { width: 100%; padding: 10px; border: 1px solid #e2e8f0; border-radius: 8px; outline: none; }
 
+        /* Toast Notification */
+        #toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 9999; }
+        .toast {
+            background: white; border-left: 5px solid var(--primary-color);
+            padding: 15px 20px; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            display: flex; align-items: center; gap: 15px; margin-top: 10px;
+            animation: slideIn 0.5s ease-out forwards; transition: 0.3s; transform: translateX(100%);
+        }
+        .toast.show { transform: translateX(0); }
+        .toast-icon { color: var(--primary-color); font-size: 24px; }
+        .toast-content h4 { margin: 0; font-size: 16px; color: #333; }
+        .toast-content p { margin: 5px 0 0; font-size: 13px; color: #666; }
+
+        /* Biến cái select nhìn giống nút bấm */
+        .status-select {
+            appearance: none; /* Ẩn mũi tên mặc định trình duyệt */
+            -webkit-appearance: none;
+            text-align: center;
+            border: none;
+            cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 20px; /* Bo tròn */
+            font-size: 0.85rem;
+        }
+
+        /* Định nghĩa màu nền (Nếu bro dùng Bootstrap thì có sẵn mấy class này rồi, ko cần thêm) */
+        .badge-primary { background-color: #007bff; }
+        .badge-warning { background-color: #ffc107; color: #000 !important; } /* Chữ đen cho dễ đọc trên nền vàng */
+        .badge-success { background-color: #28a745; }
+        .badge-danger { background-color: #dc3545; }
+
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
     </style>
 </head>
 <body>
@@ -184,6 +216,10 @@
         </div>
     </div>
 
+    <div id="toast-container"></div>
+
+    <audio id="notification-sound" src="/asset/voicethongbaodon.mp3" preload="auto"></audio>
+
     <script>
         // --- DỮ LIỆU KHỞI TẠO ---
         let hoaTuoi = [
@@ -210,6 +246,7 @@
         ];
 
         let allOrders = [];
+        let previousOrderCount = 0;
 
         // 1. Chuyển Tab
         function switchTab(tabId, element) {
@@ -224,7 +261,47 @@
         // 2. Format tiền
         const formatMoney = (amount) => new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
 
-        // 3. Tải đơn hàng & Tính toán
+
+        // 3. Hàm hiển thị thông báo
+        function showNotification(message, isSound = true) {
+            // Phát âm thanh
+            if (isSound) {
+                const sound = document.getElementById('notification-sound');
+                if (sound) {
+                    sound.currentTime = 0;
+                    sound.play().catch(e => console.log("Chặn âm thanh: ", e));
+                    sound.play().catch(e => console.log("Trình duyệt chặn tự phát âm thanh: ", e));
+                }
+            }
+
+            // --- PHẦN 2: HIỂN THỊ TOAST ---
+            const container = document.getElementById('toast-container');
+            
+            if (!container) {
+                console.error("Lỗi: Không tìm thấy <div id='toast-container'>!");
+                return; 
+            }
+
+            const toast = document.createElement('div');
+            toast.className = 'toast show';
+            toast.innerHTML = `
+                <div class="toast-icon"><i class="fa-solid fa-bell"></i></div>
+                <div class="toast-content">
+                    <h4>Thông báo mới</h4>
+                    <p>${message}</p>
+                </div>
+            `;
+            
+            container.appendChild(toast);
+
+            // Tự tắt sau 3 giây
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // 4. Tải đơn hàng
         async function loadOrders() {
             try {
                 let res = await fetch('/api/orders/all');
@@ -233,6 +310,15 @@
                     renderOrders(allOrders);
                     processCustomerData(allOrders); 
                 
+                    // Nếu số lượng đơn mới > số lượng đơn cũ VÀ không phải lần tải đầu tiên
+                    if (allOrders.length > previousOrderCount && previousOrderCount !== 0) {
+                        let newCount = allOrders.length - previousOrderCount;
+                        showNotification(`Bạn vừa có ${newCount} đơn hàng mới! 🚀`);
+                    }
+                    
+                    // Cập nhật lại số lượng đơn cũ
+                    previousOrderCount = allOrders.length;
+
                     // Tổng quan
                     let total = allOrders.reduce((sum, ord) => sum + (ord.totalAmount || 0), 0);
                     document.getElementById('totalRevenue').innerText = formatMoney(total);
@@ -260,10 +346,18 @@
         // 4. Vẽ bảng đơn hàng
         function renderOrders(orders) {
             let html = '';
+            const statusColors = {
+                'MOI_TAO': 'badge-primary',   // Xanh dương
+                'DANG_GIAO': 'badge-warning', // Vàng
+                'HOAN_THANH': 'badge-success',// Xanh lá
+                'DA_HUY': 'badge-danger'      // Đỏ
+            };
+        
             orders.forEach(order => {
-                let badge = order.status === 'MOI_TAO' ? 'badge-new' : (order.status === 'CANCELLED' ? 'badge-cancel' : 'badge-paid');
                 
                 let timeVN = formatDateVN(order.orderDate);
+
+                let currentColor = statusColors[order.status] || 'badge-secondary';
 
                 html += `
                     <tr>
@@ -280,7 +374,25 @@
                         
                         <td style="font-size:13px; font-weight:600">${timeVN}</td>
                         
-                        <td><span class="badge ${badge}">${order.status}</span></td>
+                        <td>
+                            <select 
+                                class="form-control status-select ${currentColor}" 
+                                onchange="updateStatus(${order.id}, this)"
+                            >
+                                <option value="MOI_TAO" ${order.status === 'MOI_TAO' ? 'selected' : ''}>Mới Tạo</option>
+                                <option value="DANG_GIAO" ${order.status === 'DANG_GIAO' ? 'selected' : ''}>Đang Giao</option>
+                                <option value="HOAN_THANH" ${order.status === 'HOAN_THANH' ? 'selected' : ''}>Hoàn Thành</option>
+                                <option value="DA_HUY" ${order.status === 'DA_HUY' ? 'selected' : ''}>Đã Hủy</option>
+                            </select>
+                        </td>
+                        <td>
+                            <div style="display:flex; gap:5px; align-items:center">
+                                
+                                <button class="btn" style="background:#e2e8f0; padding:5px 10px;" onclick="printOrder(${order.id})">
+                                    <i class="fa-solid fa-print"></i>
+                                </button>
+                            </div>
+                        </td>
                     </tr>
                 `;
             });
@@ -392,6 +504,45 @@
                 renderProducts(); // Vẽ lại bảng
             }
         }
+        function updateStatus(orderId, selectElement) {
+            const newStatus = selectElement.value;
+            
+            // Hiệu ứng loading nhẹ
+            selectElement.disabled = true;
+
+            fetch(`/api/orders/${orderId}/status?status=${newStatus}`, {
+                method: 'PUT'
+            })
+            .then(response => {
+                if (response.ok) {
+                    // 1. Thông báo thành công
+                    showNotification(`Đã cập nhật đơn #${orderId} sang trạng thái: ${newStatus}`, false);
+                    
+                    // 2. Cập nhật màu sắc cái ô select ngay lập tức cho đẹp
+                    selectElement.className = 'form-control status-select'; // Reset class
+                    
+                    // Map màu lại
+                    const statusColors = {
+                        'MOI_TAO': 'badge-primary',
+                        'DANG_GIAO': 'badge-warning',
+                        'HOAN_THANH': 'badge-success',
+                        'DA_HUY': 'badge-danger'
+                    };
+                    selectElement.classList.add(statusColors[newStatus] || 'badge-secondary');
+
+                } else {
+                    showNotification("Lỗi: Không thể cập nhật trạng thái!");
+                    // Nếu lỗi, reset lại giá trị cũ
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showNotification("Lỗi kết nối server!");
+            })
+            .finally(() => {
+                selectElement.disabled = false; // Mở lại cho chọn tiếp
+            });
+        }
 
         // Modal Logic
         function openModal() { document.getElementById('productModal').style.display = 'flex'; }
@@ -403,10 +554,88 @@
             renderOrders(filtered);
         }
 
+        function printOrder(orderId) {
+            // 1. Tìm thông tin đơn hàng trong mảng allOrders
+            // Lưu ý: orderId từ nút bấm là số, nên so sánh == hoặc ép kiểu
+            const order = allOrders.find(o => o.id == orderId);
+            
+            if (!order) {
+                alert("Không tìm thấy thông tin đơn hàng!");
+                return;
+            }
+
+            // 2. Tạo nội dung hóa đơn
+            const invoiceContent = `
+                <html>
+                <head>
+                    <title>Hóa Đơn #${orderId}</title>
+                    <style>
+                        body { font-family: 'Courier New', Courier, monospace; width: 300px; margin: 0 auto; padding: 10px; color: #000; }
+                        .header { text-align: center; border-bottom: 1px dashed #000; padding-bottom: 10px; margin-bottom: 10px; }
+                        .shop-name { font-size: 18px; font-weight: bold; text-transform: uppercase; }
+                        .info { font-size: 12px; margin-bottom: 5px; }
+                        .row { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 5px; }
+                        .total { border-top: 1px dashed #000; margin-top: 10px; padding-top: 10px; font-weight: bold; font-size: 14px; text-align: right; }
+                        .footer { text-align: center; margin-top: 20px; font-size: 11px; font-style: italic; }
+                    </style>
+                </head>
+                <body>
+                    <div class="header">
+                        <div class="shop-name">Tiệm Hoa TMT</div>
+                        <div>ĐC: 670/32 Đoàn Văn Bơ Phường 16 Quận 4 TP.HCM</div>
+                        <div>Hotline: 0932.013.424</div>
+                    </div>
+                    
+                    <div class="info">Số HD: <strong>#${order.id}</strong></div>
+                    <div class="info">Ngày: ${new Date().toLocaleString('vi-VN')}</div>
+                    <div class="info">Khách: ${order.customerName}</div>
+                    <div class="info">SĐT: ${order.phone}</div>
+                    <div class="info">Đ/C: ${order.address}</div>
+                    
+                    <div style="border-bottom: 1px dashed #000; margin: 10px 0;"></div>
+                    
+                    <div class="row">
+                        <span>Nội dung</span>
+                        <span>Thành tiền</span>
+                    </div>
+                    <div class="row" style="font-weight:bold">
+                        <span>Đơn hàng hoa tươi</span>
+                        <span>${formatMoney(order.totalAmount)}</span>
+                    </div>
+                    
+                    <div style="font-size:11px; font-style:italic; margin-top:5px">
+                        Ghi chú: "${order.note || 'Không có'}"
+                    </div>
+
+                    <div class="total">
+                        TỔNG CỘNG: ${formatMoney(order.totalAmount)}
+                    </div>
+
+                    <div class="footer">
+                        Cảm ơn quý khách đã ủng hộ!<br>
+                        Hẹn gặp lại lần sau.
+                    </div>
+                </body>
+                </html>
+            `;
+
+            // 3. Mở cửa sổ in
+            const printWindow = window.open('', '', 'height=600,width=400');
+            
+            // 4. Ghi nội dung vào cửa sổ đó
+            printWindow.document.write(invoiceContent);
+            printWindow.document.close(); // Đóng luồng ghi để trình duyệt biết đã xong
+            setTimeout(() => {
+                printWindow.focus();
+                printWindow.print();
+                //printWindow.close();
+            }, 500);
+        }
+
         // --- KHỞI ĐỘNG ---
         loadOrders();
         renderProducts(); 
-        setInterval(loadOrders, 10000); // Cập nhật đơn mỗi 10s
+        setInterval(loadOrders, 3000); // Cập nhật đơn mỗi 3s
     </script>
 </body>
 </html>

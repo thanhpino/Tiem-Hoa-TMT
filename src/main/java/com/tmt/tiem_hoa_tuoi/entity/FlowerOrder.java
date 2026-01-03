@@ -25,6 +25,9 @@ public class FlowerOrder {
     private String address;      // Địa chỉ
 
     @Column(columnDefinition = "nvarchar(255)")
+    private String email;      // Địa chỉ Email
+
+    @Column(columnDefinition = "nvarchar(255)")
     private String note;         // Ghi chú
     private Double totalAmount;  // Tổng tiền
     private String status;       // Trạng thái đơn

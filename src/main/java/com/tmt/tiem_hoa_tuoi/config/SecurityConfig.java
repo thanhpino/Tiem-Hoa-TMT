@@ -19,7 +19,7 @@ public class SecurityConfig {
         http
             .csrf(csrf -> csrf.disable()) // Tắt CSRF để test API
             .authorizeHttpRequests((requests) -> requests
-                .requestMatchers("/", "/index.html", "/thanhtoan.html", "/css/**", "/js/**", "/images/**", "/api/orders/create", "/api/create-paypal-order", "/api/capture-paypal-order", "/api", "/v1/oauth2/token").permitAll() 
+                .requestMatchers("/", "/index.html", "/thanhtoan.html", "/css/**", "/js/**", "/images/**", "/api/orders/create", "/api/create-paypal-order", "/api/capture-paypal-order", "/api/**", "/v1/oauth2/token", "/asset/**").permitAll() 
                 .requestMatchers("/admin.html", "/api/orders/all").authenticated() // Trang Admin và API xem đơn
             )
             .formLogin((form) -> form

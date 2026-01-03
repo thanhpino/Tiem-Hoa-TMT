@@ -44,6 +44,11 @@
                                 class="w-full p-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all">
                         </div>
 
+                        <div class="mb-4">
+                            <label class="block text-gray-700 text-sm font-bold mb-2">Email nhận hóa đơn</label>
+                            <input type="email" id="email" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="vidu@gmail.com">
+                        </div>
+
                         <div class="col-span-2">
                             <label class="block text-sm font-medium text-slate-700 mb-1">Địa chỉ nhận hoa <span class="text-red-500">*</span></label>
                             <input type="text" id="deliveryAddress" placeholder="Số nhà, tên đường, phường, quận..." 
@@ -182,6 +187,7 @@
         const name = document.getElementById('customerName').value.trim();
         const phone = document.getElementById('customerPhone').value.trim();
         const address = document.getElementById('deliveryAddress').value.trim();
+        const email = document.getElementById('email').value.trim();
         const userNote = document.getElementById('orderNote').value.trim();
 
         // Ghép ghi chú của khách với phương thức thanh toán
@@ -191,6 +197,7 @@
             customerName: name,
             phone: phone,
             address: address,
+            email: email,
             note: finalNote,
             totalAmount: totalAmount,
             status: "MOI_TAO" // Trạng thái mặc định
@@ -377,12 +384,16 @@
 
         paypal.Buttons({
             createOrder: async function() {
+                if (!validateForm()) {
+                    alert("Vui lòng điền đầy đủ thông tin giao hàng trước khi thanh toán qua PayPal!");
+                    return;
+                }
                 try {
                     // Gọi API Java
                     const response = await fetch("/api/create-paypal-order", { 
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ cart: cart }), 
+                        body: JSON.stringify({ total: total }), 
                     });
                     const order = await response.json();
                     return order.id;
@@ -393,17 +404,39 @@
             },
             onApprove: async function(data, actions) {
                 try {
-                    // Gọi API Java để capture
+                    // 1. Lấy email từ form
+                    const customerEmail = document.getElementById("email").value;
+                    const customerName = document.getElementById("customerName").value || "Khách hàng";
+
+                    const customerAddress = document.getElementById("deliveryAddress").value || "Không có địa chỉ";
+                    const customerPhone = document.getElementById("customerPhone").value || "Không có SĐT";
+
+                    
+                    if (!customerEmail || !customerEmail.includes('@')) {
+                        alert("Vui lòng nhập Email hợp lệ để nhận hóa đơn!");
+                        return; // Dừng lại, không gọi backend
+                    }
+
+                    // 2. Gọi API Java để capture và gửi Email
                     const response = await fetch("/api/capture-paypal-order", {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ orderID: data.orderID }),
+                        body: JSON.stringify({ 
+                            orderID: data.orderID,
+                            email: customerEmail, // Gửi email về đây
+                            customerName: customerName,
+                            total: total,
+                            address: customerAddress,
+                            phone: customerPhone
+                        }),
                     });
+
                     const details = await response.json();
+                    
                     if (details.status === 'COMPLETED') {
-                        // Lưu đơn hàng vào database
-                        await guiDonHangVeBackend('PAYPAL', total); 
-                        showThankYouScreen('PayPal', details.id);
+                        // Thành công
+                        alert("Thanh toán thành công! Hóa đơn đã được gửi tới email: " + customerEmail);
+                        showThankYouScreen('PayPal', details.id);   
                     }
                 } catch (err) {
                     console.error("Lỗi capture:", err);
