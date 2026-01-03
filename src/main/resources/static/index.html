@@ -93,26 +93,26 @@
     <script>
         // DANH SÁCH HOA
         const hoaTuoi = [
-            { id: 1, name: 'Bó Hoa Hồng Đỏ', price: 550000, salePrice: 490000, image: 'images/hoahong.jpg', meaning: 'Biểu tượng của tình yêu nồng cháy, lãng mạn và sự tôn trọng sâu sắc. Hoàn hảo cho các dịp lễ tình nhân, kỷ niệm.' },
-            { id: 2, name: 'Bó Hoa Ly Trắng', price: 480000, image: 'images/hoaly.jpg', meaning: 'Tượng trưng cho sự trong trắng, đức hạnh và thanh cao. Thích hợp để tặng mẹ, bạn bè hoặc trong các dịp trang trọng.' },
-            { id: 3, name: 'Bó Hoa Hướng Dương', price: 450000, image: 'images/hoahuongduong.jpg', meaning: 'Mang ý nghĩa về sự lạc quan, niềm tin và hy vọng. Là món quà tuyệt vời để chúc mừng tốt nghiệp, khai trương.' },
-            { id: 4, name: 'Bó Hoa Cẩm Tú Cầu', price: 620000, image: 'images/camtucau.jpg', meaning: 'Thể hiện lòng biết ơn chân thành và những cảm xúc sâu sắc. Màu sắc hoa có thể thay đổi tùy theo độ pH của đất.' },
-            { id: 5, name: 'Bó Tulip Hà Lan', price: 750000, image: 'images/tulip.jpg', meaning: 'Tượng trưng cho sự giàu có, nổi tiếng và một tình yêu hoàn hảo. Mỗi màu tulip lại mang một thông điệp riêng.' },
-            { id: 6, name: 'Bó Hoa Cúc Tana', price: 400000, image: 'images/cuctana.jpg', meaning: 'Nhỏ xinh, mộc mạc, mang ý nghĩa "Tình yêu thuở ban đầu" hay một tình bạn trong sáng, bền chặt.' },
-            { id: 7, name: 'Bó Hoa Baby Trắng', price: 380000, salePrice: 290000, image: 'images/hoababy.jpg', meaning: 'Biểu tượng của tình yêu tinh khiết, ngây thơ và trong trắng. Thường được dùng làm hoa phụ hoặc một bó hoa riêng.' },
-            { id: 8, name: 'Bó Lan Hồ Điệp', price: 1200000, salePrice: 1000000, image: 'images/lanhodiep.jpg', meaning: 'Sang trọng và quý phái, tượng trưng cho sự giàu sang, thịnh vượng và vẻ đẹp hoàn mỹ. Món quà đẳng cấp cho đối tác.' },
-            { id: 9, name: 'Bó Mẫu Đơn Hồng', price: 850000, image: 'images/maudon.jpg', meaning: 'Biểu tượng cho sự thịnh vượng, sắc đẹp và một cuộc hôn nhân hạnh phúc, viên mãn. Vẻ đẹp kiêu sa, quyến rũ.' },
-            { id: 10, name: 'Bó Oải Hương Khô', price: 420000, image: 'images/oaihuong.jpg', meaning: 'Mang ý nghĩa về sự tinh khiết, nhẹ nhàng và tận tâm. Hương thơm thư giãn, tượng trưng cho sự bình yên.' },
-            { id: 11, name: 'Bó Cẩm Chướng', price: 390000, salePrice: 290000, image: 'images/camchuong.jpg', meaning: 'Tượng trưng cho niềm tự hào, sắc đẹp và sự ái mộ. Mỗi màu sắc lại mang một thông điệp tình cảm khác nhau.' },
-            { id: 12, name: 'Bó Cúc Họa Mi', price: 350000, image: 'images/cuchoami.jpg', meaning: 'Đại diện cho tình yêu thầm lặng, sự trong trắng và tinh khiết của tâm hồn. Vẻ đẹp giản dị, gần gũi.' },
-            { id: 13, name: 'Bó Hoa Sen Trắng', price: 500000, image: 'images/hoasen.jpg', meaning: 'Biểu tượng của sự thanh cao, thuần khiết và giác ngộ. Thể hiện sự tôn kính và bình yên trong tâm hồn.' },
-            { id: 14, name: 'Bó Cát Tường', price: 460000, image: 'images/cattuong.jpg', meaning: 'Mang ý nghĩa "may mắn", là lời chúc cho sự thuận lợi, viên mãn và hạnh phúc trong cuộc sống.' },
-            { id: 15, name: 'Bó Thạch Thảo Tím', price: 370000, image: 'images/thachthao.jpg', meaning: 'Tượng trưng cho một tình yêu chung thủy, không thay đổi và sự nhớ nhung, chờ đợi trong tình yêu.' },
-            { id: 16, name: 'Bó Hoa Rum', price: 580000, image: 'images/rum.jpg', meaning: 'Vẻ đẹp của sự thanh lịch, độc đáo và sự trở về của hạnh phúc. Thích hợp cho các không gian hiện đại.' },
-            { id: 17, name: 'Bó Đồng Tiền', price: 410000, image: 'images/dongtien.jpg', meaning: 'Tượng trưng cho sự hạnh phúc, tươi vui và tài lộc. Mang lại sự rạng rỡ và năng lượng tích cực.' },
-            { id: 18, name: 'Bó Salem Tím', price: 360000, image: 'images/salem.jpg', meaning: 'Là biểu tượng của sự trường tồn và nỗi nhớ không nguôi. Hoa khô giữ được rất lâu, như một kỷ niệm bền vững.' },
-            { id: 19, name: 'Bó Mõm Sói', price: 430000, image: 'images/momsoi.jpg', meaning: 'Đại diện cho sức mạnh, sự duyên dáng và có thể là một chút bí ẩn, che giấu. Mang vẻ đẹp độc đáo, rực rỡ.' },
-            { id: 20, name: 'Bó Thủy Tiên Trắng', price: 490000, image: 'images/thuytien.jpg', meaning: 'Tượng trưng cho sự tái sinh, khởi đầu mới và lòng tự trọng. Vẻ đẹp tinh khôi, kiêu hãnh và hương thơm nhẹ nhàng.' }
+            { id: 1, name: 'Hoa Hồng Đỏ', price: 550000, salePrice: 490000, image: 'images/hoahong.jpg', meaning: 'Biểu tượng của tình yêu nồng cháy, lãng mạn và sự tôn trọng sâu sắc. Hoàn hảo cho các dịp lễ tình nhân, kỷ niệm.' },
+            { id: 2, name: 'Hoa Ly Trắng', price: 480000, image: 'images/hoaly.jpg', meaning: 'Tượng trưng cho sự trong trắng, đức hạnh và thanh cao. Thích hợp để tặng mẹ, bạn bè hoặc trong các dịp trang trọng.' },
+            { id: 3, name: 'Hoa Hướng Dương', price: 450000, image: 'images/hoahuongduong.jpg', meaning: 'Mang ý nghĩa về sự lạc quan, niềm tin và hy vọng. Là món quà tuyệt vời để chúc mừng tốt nghiệp, khai trương.' },
+            { id: 4, name: 'Hoa Cẩm Tú Cầu', price: 620000, image: 'images/camtucau.jpg', meaning: 'Thể hiện lòng biết ơn chân thành và những cảm xúc sâu sắc. Màu sắc hoa có thể thay đổi tùy theo độ pH của đất.' },
+            { id: 5, name: 'Tulip Hà Lan', price: 750000, image: 'images/tulip.jpg', meaning: 'Tượng trưng cho sự giàu có, nổi tiếng và một tình yêu hoàn hảo. Mỗi màu tulip lại mang một thông điệp riêng.' },
+            { id: 6, name: 'Hoa Cúc Tana', price: 400000, image: 'images/cuctana.jpg', meaning: 'Nhỏ xinh, mộc mạc, mang ý nghĩa "Tình yêu thuở ban đầu" hay một tình bạn trong sáng, bền chặt.' },
+            { id: 7, name: 'Hoa Baby Trắng', price: 380000, salePrice: 290000, image: 'images/hoababy.jpg', meaning: 'Biểu tượng của tình yêu tinh khiết, ngây thơ và trong trắng. Thường được dùng làm hoa phụ hoặc một bó hoa riêng.' },
+            { id: 8, name: 'Lan Hồ Điệp', price: 1200000, salePrice: 1000000, image: 'images/lanhodiep.jpg', meaning: 'Sang trọng và quý phái, tượng trưng cho sự giàu sang, thịnh vượng và vẻ đẹp hoàn mỹ. Món quà đẳng cấp cho đối tác.' },
+            { id: 9, name: 'Mẫu Đơn Hồng', price: 850000, image: 'images/maudon.jpg', meaning: 'Biểu tượng cho sự thịnh vượng, sắc đẹp và một cuộc hôn nhân hạnh phúc, viên mãn. Vẻ đẹp kiêu sa, quyến rũ.' },
+            { id: 10, name: 'Oải Hương Khô', price: 420000, image: 'images/oaihuong.jpg', meaning: 'Mang ý nghĩa về sự tinh khiết, nhẹ nhàng và tận tâm. Hương thơm thư giãn, tượng trưng cho sự bình yên.' },
+            { id: 11, name: 'Cẩm Chướng', price: 390000, salePrice: 290000, image: 'images/camchuong.jpg', meaning: 'Tượng trưng cho niềm tự hào, sắc đẹp và sự ái mộ. Mỗi màu sắc lại mang một thông điệp tình cảm khác nhau.' },
+            { id: 12, name: 'Cúc Họa Mi', price: 350000, image: 'images/cuchoami.jpg', meaning: 'Đại diện cho tình yêu thầm lặng, sự trong trắng và tinh khiết của tâm hồn. Vẻ đẹp giản dị, gần gũi.' },
+            { id: 13, name: 'Hoa Sen Trắng', price: 500000, image: 'images/hoasen.jpg', meaning: 'Biểu tượng của sự thanh cao, thuần khiết và giác ngộ. Thể hiện sự tôn kính và bình yên trong tâm hồn.' },
+            { id: 14, name: 'Cát Tường', price: 460000, image: 'images/cattuong.jpg', meaning: 'Mang ý nghĩa "may mắn", là lời chúc cho sự thuận lợi, viên mãn và hạnh phúc trong cuộc sống.' },
+            { id: 15, name: 'Thạch Thảo Tím', price: 370000, image: 'images/thachthao.jpg', meaning: 'Tượng trưng cho một tình yêu chung thủy, không thay đổi và sự nhớ nhung, chờ đợi trong tình yêu.' },
+            { id: 16, name: 'Hoa Rum', price: 580000, image: 'images/rum.jpg', meaning: 'Vẻ đẹp của sự thanh lịch, độc đáo và sự trở về của hạnh phúc. Thích hợp cho các không gian hiện đại.' },
+            { id: 17, name: 'Đồng Tiền', price: 410000, image: 'images/dongtien.jpg', meaning: 'Tượng trưng cho sự hạnh phúc, tươi vui và tài lộc. Mang lại sự rạng rỡ và năng lượng tích cực.' },
+            { id: 18, name: 'Salem Tím', price: 360000, image: 'images/salem.jpg', meaning: 'Là biểu tượng của sự trường tồn và nỗi nhớ không nguôi. Hoa khô giữ được rất lâu, như một kỷ niệm bền vững.' },
+            { id: 19, name: 'Mõm Sói', price: 430000, image: 'images/momsoi.jpg', meaning: 'Đại diện cho sức mạnh, sự duyên dáng và có thể là một chút bí ẩn, che giấu. Mang vẻ đẹp độc đáo, rực rỡ.' },
+            { id: 20, name: 'Thủy Tiên Trắng', price: 490000, image: 'images/thuytien.jpg', meaning: 'Tượng trưng cho sự tái sinh, khởi đầu mới và lòng tự trọng. Vẻ đẹp tinh khôi, kiêu hãnh và hương thơm nhẹ nhàng.' }
         ];
 
         let cart = [];
