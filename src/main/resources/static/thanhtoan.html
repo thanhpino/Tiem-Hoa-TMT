@@ -68,7 +68,11 @@
                 <div class="space-y-4 mb-8">
                      <button data-method="cod" class="payment-method w-full flex justify-between items-center p-4 border-2 rounded-lg transition-all text-left">
                         <div class="flex items-center">
-                            <i data-lucide="truck" class="w-8 h-8 mr-4 text-slate-500 flex-shrink-0"></i>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-8 h-8 mr-4 text-green-500 flex-shrink-0">
+                            <path d="M10 17h4"/><path d="M20 17h2v-2a2 2 0 0 0-2-2h-3.8l-1.6-3.2A2 2 0 0 0 12.8 9H8a2 2 0 0 0-2 2v9"/>
+                            <path d="M2 17h2"/><path d="m2 17 2.6-6.5a2 2 0 0 1 1.8-1.3H9"/>
+                            <circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/>
+                            </svg>
                             <div>
                                 <p class="font-semibold">Thanh toán khi nhận hoa (COD)</p>
                                 <p class="text-sm text-slate-500">Thanh toán bằng tiền mặt khi shipper giao hoa tận nơi.</p>
@@ -98,7 +102,9 @@
                     </button>
                     <button data-method="paypal" class="payment-method w-full flex justify-between items-center p-4 border-2 rounded-lg transition-all text-left">
                         <div class="flex items-center">
-                            <i data-lucide="credit-card" class="w-8 h-8 mr-4 text-slate-500 flex-shrink-0"></i>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-8 h-8 mr-4 text-blue-500 flex-shrink-0">
+                            <rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/>
+                            </svg>
                             <div>
                                 <p class="font-semibold">PayPal hoặc Thẻ quốc tế</p>
                                 <p class="text-sm text-slate-500">Sử dụng tài khoản PayPal hoặc thẻ Visa, Mastercard.</p>
@@ -339,7 +345,11 @@
                         <h1 class="text-3xl font-bold text-pink-600 mb-4">Quét Mã VietQR Để Thanh Toán</h1>
                         <p class="text-slate-600 mb-6">Vui lòng sử dụng ứng dụng <strong>Ngân hàng</strong>, <strong>MoMo</strong>, hoặc <strong>ZaloPay</strong> để quét mã.</p>
                         
-                        <img src="images/myqr.jpg" alt="Mã VietQR" class="w-56 h-56 mx-auto border-4 border-pink-200 rounded-lg p-1">
+                        <img 
+                            src="https://img.vietqr.io/image/VCB-1040868320-compact2.jpg?amount=${total}&addInfo=${orderId}&accountName=TRUONG MINH THANH" 
+                            alt="Mã QR Chuyển Khoản" 
+                            class="w-56 h-56 mx-auto border-4 border-pink-200 rounded-lg p-1"
+                        >
                         
                         <div class="text-left bg-rose-50 p-4 rounded-lg my-6 space-y-3 border border-red-200">
                             <p>
