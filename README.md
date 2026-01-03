@@ -13,10 +13,20 @@
 Dự án được xây dựng theo kiến trúc **RESTful API**, sử dụng **Spring Boot** làm lõi, deployed trên nền tảng Cloud sử dụng **Docker Container**.
 
 > **Customer Main Page :** [https://tiem-hoa-tmt.onrender.com](/src/main/resources/static/images/H1.png)
+
+
 > **Customer Main Payment :** [https://tiem-hoa-tmt.onrender.com/thanhtoan.html](/src/main/resources/static/images/H2.png)
-> **Security Admin Web:** [](/src/main/resources/static/images/H3.png)  
+
+
+> **Security Admin Web:** [Username and Password required](/src/main/resources/static/images/H3.png)  
+
+
 > **Admin Dashboard:** [https://tiem-hoa-tmt.onrender.com/admin.html](/src/main/resources/static/images/H4.png)
-> **Add and delete product** [](/src/main/resources/static/images/H5.png)
+
+
+> **Add and delete product** [Add and delete here](/src/main/resources/static/images/H5.png)
+
+
 
 ---
 
