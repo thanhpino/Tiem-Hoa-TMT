@@ -6,20 +6,21 @@
 ![Docker](https://img.shields.io/badge/Docker-2CA5E0?style=for-the-badge&logo=docker&logoColor=white)
 ![Render](https://img.shields.io/badge/Render-46E3B7?style=for-the-badge&logo=render&logoColor=white)
 
-> **Live Demo:** [https://tiem-hoa-tmt.onrender.com](https://tiem-hoa-tmt.onrender.com)  
-> **Admin Dashboard:** [https://tiem-hoa-tmt.onrender.com/admin.html](https://tiem-hoa-tmt.onrender.com/admin.html)
-
----
-
 ## 📖 Giới Thiệu
 
 **Tiệm Hoa TMT** là một dự án Full-stack Web Application chuyên cung cấp giải pháp đặt mua hoa tươi trực tuyến. Dự án tập trung vào trải nghiệm người dùng mượt mà, tích hợp thanh toán điện tử hiện đại và hệ thống quản trị (Admin Dashboard) thông minh với khả năng phân tích dữ liệu khách hàng.
 
 Dự án được xây dựng theo kiến trúc **RESTful API**, sử dụng **Spring Boot** làm lõi, deployed trên nền tảng Cloud sử dụng **Docker Container**.
 
+> **Customer Main Page :** [https://tiem-hoa-tmt.onrender.com](/src/main/resources/static/images/H1.png)
+> **Customer Main Payment :** [https://tiem-hoa-tmt.onrender.com/thanhtoan.html](/src/main/resources/static/images/H2.png)
+> **Security Admin Web:** [](/src/main/resources/static/images/H3.png)  
+> **Admin Dashboard:** [https://tiem-hoa-tmt.onrender.com/admin.html](/src/main/resources/static/images/H4.png)
+> **Add and delete product** [](/src/main/resources/static/images/H5.png)
+
 ---
 
-## 🚀 Tính Năng Nổi Bật (Key Features)
+## 🚀 Key Features
 
 ### 🛒 Dành Cho Khách Hàng (Storefront)
 * **Catalog Sản Phẩm:** Duyệt danh sách các loại hoa tươi với hình ảnh trực quan, thông tin ý nghĩa từng loại hoa.
@@ -72,3 +73,20 @@ TIEM-HOA-TUOI
 ├── Dockerfile       # Cấu hình đóng gói Container
 ├── compose.yaml     # Cấu hình Docker Compose
 └── pom.xml          # Quản lý thư viện Maven
+
+🗺️ Roadmap Phát Triển (Future Enhancements)
+[ ] Authentication: Tích hợp JWT để bảo mật API và phân quyền User/Admin chuyên sâu.
+
+[ ] Database Sản Phẩm: Chuyển dữ liệu sản phẩm từ Client-side vào MySQL Database.
+
+[ ] Email Marketing: Tự động gửi email hóa đơn khi đặt hàng thành công.
+
+[ ] AI Chatbot: Tích hợp Chatbot tư vấn chọn hoa theo ý nghĩa.  
+
+
+👨‍💻 Tác Giả
+Trương Minh Thành * Sinh viên Kỹ Thuật Phần Mềm - Năm 2
+
+Đam mê: Cloud Engineering, DevOps, Java Backend.
+
+GitHub: github.com/thanhpino
