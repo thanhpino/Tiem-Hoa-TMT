@@ -208,7 +208,10 @@
             <h3 style="margin-bottom:20px; color:var(--primary-color)">Thêm Hoa Mới</h3>
             <div class="form-group"><label>Tên Hoa</label><input type="text" id="newProdName"></div>
             <div class="form-group"><label>Giá (VNĐ)</label><input type="number" id="newProdPrice"></div>
-            <div class="form-group"><label>Link Ảnh (URL)</label><input type="text" id="newProdImg" placeholder="images/..."></div>
+            <div class="form-group">
+                <label>Hình Ảnh</label>
+                <input type="file" id="newProdImgFile" accept="image/*"> <p id="uploadStatus" style="font-size:12px; color:gray; margin-top:5px"></p>
+            </div>
             <div style="text-align:right; margin-top:20px;">
                 <button class="btn" style="background:#f1f5f9; margin-right:10px; color:#333" onclick="closeModal()">Hủy</button>
                 <button class="btn btn-primary" onclick="addProduct()">Lưu Sản Phẩm</button>
@@ -477,25 +480,67 @@
             document.getElementById('productTableBody').innerHTML = html;
         }
 
-        function addProduct() {
+        async function addProduct() {
             let name = document.getElementById('newProdName').value;
             let price = document.getElementById('newProdPrice').value;
-            let img = document.getElementById('newProdImg').value || 'images/hoahong.jpg';
+            let fileInput = document.getElementById('newProdImgFile');
+            let statusText = document.getElementById('uploadStatus');
 
-            if (name && price) {
-                // Thêm vào đầu mảng
-                hoaTuoi.unshift({
-                    id: Date.now(),
-                    name: name,
-                    price: parseInt(price),
-                    image: img
-                });
-                renderProducts();
-                closeModal();
-                alert("Đã thêm hoa mới thành công!");
-            } else {
+            if (!name || !price) {
                 alert("Vui lòng nhập tên và giá!");
+                return;
             }
+
+            let imageUrl = 'images/hoahong.jpg';
+
+            // 1. Kiểm tra xem có file ảnh không
+            if (fileInput.files.length > 0) {
+                statusText.innerText = "Đang upload ảnh lên Cloud... Vui lòng đợi...";
+                let file = fileInput.files[0];
+                let formData = new FormData();
+                formData.append("file", file);
+
+                try {
+                    // 2. Gửi file lên Server Java
+                    let response = await fetch('/api/products/upload', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    if (response.ok) {
+                        let data = await response.json();
+                        imageUrl = data.url; // 3. Lấy link ảnh từ Cloudinary
+                        statusText.innerText = "Upload thành công!";
+                    } else {
+                        alert("Lỗi upload ảnh!");
+                        statusText.innerText = "";
+                        return;
+                    }
+                } catch (e) {
+                    console.error(e);
+                    alert("Lỗi kết nối server!");
+                    return;
+                }
+            }
+
+            // 4. Lưu sản phẩm vào mảng
+            hoaTuoi.unshift({
+                id: Date.now(),
+                name: name,
+                price: parseInt(price),
+                image: imageUrl 
+            });
+            
+            renderProducts();
+            closeModal();
+            
+            // Reset form
+            document.getElementById('newProdName').value = "";
+            document.getElementById('newProdPrice').value = "";
+            document.getElementById('newProdImgFile').value = "";
+            statusText.innerText = "";
+            
+            showNotification("Đã thêm sản phẩm mới thành công!", false);
         }
 
         function deleteProduct(index) {

@@ -12,135 +12,258 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         body { font-family: 'Quicksand', sans-serif; }
-        h1, h2, h3 { font-family: 'Playfair Display', serif; }
-        .product-image-zoom { transition: transform 0.3s ease-in-out; }
-        .group:hover .product-image-zoom { transform: scale(1.05); }
-        button:disabled { background-color: #9ca3af; cursor: not-allowed; }
-        .quiz-option.selected{ border-color: #ec4899; background-color: #fdf2f8; transform: translateY(-4px);}
+        h1, h2, h3, .font-serif { font-family: 'Playfair Display', serif; }
+        .product-image-zoom { transition: transform 0.5s ease-in-out; }
+        .group:hover .product-image-zoom { transform: scale(1.1); }
+        button:disabled { background-color: #d1d5db; cursor: not-allowed; }
+        
+        /* Hiệu ứng kính mờ cho Header và Cart */
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        /* Animation cho Hero text */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-up { animation: fadeUp 1s ease-out forwards; }
+        .delay-200 { animation-delay: 0.2s; }
+        .delay-400 { animation-delay: 0.4s; }
     </style>
 </head>
-<body class="bg-rose-50 text-gray-800">
+<body class="bg-slate-50 text-gray-800">
 
-    <button id="contact-button" class="fixed bottom-5 right-5 bg-pink-500 text-white font-bold p-4 rounded-full shadow-lg z-40 hover:bg-pink-600 transition-transform hover:scale-110">
-        <i data-lucide="phone" class="w-8 h-8"></i>
+    <nav class="fixed top-0 left-0 right-0 z-30 glass-effect shadow-sm transition-all duration-300">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <div class="bg-pink-500 text-white p-2 rounded-full">
+                    <i data-lucide="flower-2" class="w-6 h-6"></i>
+                </div>
+                <span class="text-2xl font-serif font-bold text-pink-600">Tiệm Hoa TMT</span>
+            </div>
+            <div class="hidden md:flex gap-8 font-semibold text-gray-600">
+                <a href="#" class="hover:text-pink-500 transition-colors">Trang Chủ</a>
+                <a href="#product-grid" class="hover:text-pink-500 transition-colors">Sản Phẩm</a>
+                <a href="#" class="hover:text-pink-500 transition-colors" onclick="openContactModal()">Liên Hệ</a>
+            </div>
+            <button onclick="document.getElementById('cart-section').scrollIntoView({behavior: 'smooth'})" class="relative p-2 hover:bg-pink-50 rounded-full transition-colors md:hidden">
+                <i data-lucide="shopping-bag" class="w-6 h-6 text-gray-700"></i>
+            </button>
+        </div>
+    </nav>
+
+    <button id="contact-button" class="fixed bottom-5 right-5 bg-green-500 text-white font-bold p-4 rounded-full shadow-lg z-40 hover:bg-green-600 transition-transform hover:scale-110">
+        <i data-lucide="phone" class="w-6 h-6"></i>
     </button>
-    <div class="container mx-auto p-4 sm:p-6 lg:p-8">
+
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-12">
         
-        <header class="text-center mb-12">
-            <h1 class="text-4xl md:text-5xl font-bold text-pink-600">Tiệm Hoa Tươi TMT</h1>
-            <p class="text-gray-500 mt-2 text-lg">Nơi mỗi đóa hoa là một lời yêu thương</p>
-        </header>
-        <div id='quiz-banner' class="bg-gradient-to-r from-purple-500 to-pink-500 text-white p-8 rounded-2xl shadow-lg mb-12 text-center">
-            <h2 class="text-3xl font-bold mb-3">Chưa biết tặng hoa gì?</h2>
-            <p class="text-lg opacity-90 mb-6">Hãy để TMT giúp bạn chọn bó hoa hoàn hảo chỉ trong vài giây!</p>
-            <button id="show-quiz-button" class="bg-white text-pink-500 font-bold py-3 px-8 rounded-lg hover:bg-rose-50 transition-colors shadow-md">Bắt đầu ngay!</button>
-        </div>
-        <div id="special-occasion-banner" class="hidden bg-gradient-to-r from-purple-500 to-pink-500 text-white p-8 rounded-2xl shadow-lg mb-12 text-center">
-            <h2 id="occasion-title" class="text-3xl font-bold mb-3"></h2>
-            <p id="occasion-desc" class="text-lg opacity-90 mb-6"></p>
-            <div id="occasion-product-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
-        </div>
+        <section class="relative w-full h-[500px] rounded-3xl overflow-hidden shadow-2xl mb-16 group">
+            <div class="absolute inset-0">
+                <img id="hero-image"
+                     src="images/fb.jpg"
+                     alt="Banner Hoa" 
+                     class="w-full h-full object-cover transition-transform duration-[20s] ease-linear group-hover:scale-110">
+            </div>
+            <div class="absolute inset-0 bg-gradient-to-r from-black/60 to-transparent"></div>
+            
+            <div class="relative h-full flex flex-col justify-center px-8 md:px-16 max-w-3xl">
+                <span class="text-pink-300 font-bold tracking-wider uppercase mb-4 animate-fade-up">Welcome to TMT Florist</span>
+                <h1 class="text-4xl md:text-6xl font-serif font-bold text-white mb-6 leading-tight animate-fade-up delay-200">
+                    Trao Gửi Cảm Xúc <br> Qua Từng Cánh Hoa
+                </h1>
+                <p class="text-gray-200 text-lg mb-8 max-w-lg animate-fade-up delay-400">
+                    Mỗi bó hoa là một câu chuyện. Hãy để chúng tôi giúp bạn viết nên những khoảnh khắc đáng nhớ nhất.
+                </p>
+                <div class="animate-fade-up delay-400">
+                    <button onclick="document.getElementById('product-grid').scrollIntoView({behavior: 'smooth'})" 
+                            class="bg-pink-500 hover:bg-pink-600 text-white font-bold py-4 px-8 rounded-full shadow-lg transition-all transform hover:translate-y-[-2px] flex items-center gap-2">
+                        <span>Khám Phá Ngay</span>
+                        <i data-lucide="arrow-down" class="w-5 h-5"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
 
         <main class="flex flex-col lg:flex-row gap-12">
-            <div class="w-full lg:w-2/3">
-                <h2 class="text-3xl font-semibold mb-6 text-gray-700">Bộ Sưu Tập Hoa</h2>
+            <div class="w-full lg:w-3/4">
+                <div class="flex items-center justify-between mb-8">
+                    <h2 class="text-3xl font-serif font-bold text-gray-800">Bộ Sưu Tập Mới</h2>
+                    <div class="h-1 flex-1 bg-gray-200 ml-6 rounded-full hidden sm:block"></div>
+                </div>
                 <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-8"></div>
             </div>
 
-            <aside class="w-full lg:w-1/3">
-                <div class="bg-white/80 backdrop-blur-md p-6 rounded-2xl shadow-lg ring-1 ring-black ring-opacity-5 sticky top-8">
-                    <h2 class="text-2xl font-semibold mb-6 border-b pb-4 text-gray-700">Giỏ hoa của bạn</h2>
-                    <div id="cart-items" class="space-y-4 mb-6 min-h-[100px]">
-                        <p id="empty-cart-message" class="text-gray-400">Giỏ hoa đang trống...</p>
+            <aside class="w-full lg:w-1/4" id="cart-section">
+                <div class="glass-effect p-6 rounded-2xl shadow-xl sticky top-24 border border-white/50">
+                    <div class="flex items-center gap-3 mb-6 border-b border-gray-200 pb-4">
+                        <i data-lucide="shopping-cart" class="w-6 h-6 text-pink-600"></i>
+                        <h2 class="text-xl font-bold text-gray-700">Giỏ Hàng</h2>
                     </div>
                     
-                    <div class="border-t pt-4">
-                        <div class="flex justify-between items-center text-xl font-bold">
-                            <span>Tổng cộng:</span>
-                            <span id="total-price" class="text-pink-600">0đ</span>
+                    <div id="cart-items" class="space-y-4 mb-6 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
+                        <p id="empty-cart-message" class="text-gray-400 text-center py-8 italic">Chưa có bông hoa nào...</p>
+                    </div>
+                    
+                    <div class="border-t border-gray-200 pt-4">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-gray-600">Tạm tính:</span>
+                            <span id="total-price" class="text-xl font-bold text-pink-600">0đ</span>
                         </div>
-                        <button id="checkout-button" class="w-full bg-pink-500 text-white font-bold py-3 rounded-lg mt-6 hover:bg-pink-600 transition-colors duration-300 shadow-md" disabled>Thanh toán</button>
+                        <p class="text-xs text-gray-400 mb-4 text-center">Miễn phí vận chuyển nội thành</p>
+                        <button id="checkout-button" class="w-full bg-gray-800 text-white font-bold py-3 rounded-xl hover:bg-gray-900 transition-colors duration-300 shadow-lg flex justify-center items-center gap-2" disabled>
+                            <span>Thanh toán</span>
+                            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </button>
                     </div>
                 </div>
             </aside>
         </main>
     </div>
-    <div id="quiz-modal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center p-4 hidden z-50"></div>
 
-    <div id="contact-modal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center p-4 hidden z-50">
-        <div class="bg-white rounded-2xl shadow-xl p-8 w-full max-w-sm text-center">
+    <div id="contact-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 hidden z-50 transition-opacity duration-300">
+        <div class="bg-white rounded-3xl shadow-2xl p-8 w-full max-w-sm text-center transform transition-all scale-100">
             <div class="flex justify-between items-center mb-6">
-                <h2 class="text-2xl font-bold text-gray-800">Bạn cần tư vấn?</h2>
-                <button onclick="closeContactModal()" class="text-gray-400 hover:text-gray-600"><i data-lucide="x" class="w-6 h-6"></i></button>
+                <h2 class="text-2xl font-bold text-gray-800 font-serif">Liên Hệ TMT</h2>
+                <button onclick="closeContactModal()" class="text-gray-400 hover:text-gray-600 bg-gray-100 p-2 rounded-full"><i data-lucide="x" class="w-5 h-5"></i></button>
             </div>
-            <p class="text-gray-500 mb-6">Đừng ngần ngại, hãy liên hệ với mình nhé :3</p>
+            <p class="text-gray-500 mb-8">Chúng mình luôn sẵn sàng lắng nghe bạn!</p>
             <div class="space-y-4">
-                <a href="tel:0932013424" class="flex items-center justify-center w-full bg-pink-500 text-white font-bold py-3 px-4 rounded-lg hover:bg-pink-600 transition-colors">
-                    <i data-lucide="phone" class="w-5 h-5 mr-3"></i> Gọi ngay: 0932 013 424
+                <a href="tel:0932013424" class="flex items-center justify-center w-full bg-pink-500 text-white font-bold py-3 px-4 rounded-xl hover:bg-pink-600 transition-colors shadow-md hover:-translate-y-1">
+                    <i data-lucide="phone" class="w-5 h-5 mr-3"></i> 0932 013 424
                 </a>
-                <a href="https://zalo.me/0379602647" target="_blank" class="flex items-center justify-center w-full bg-blue-500 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-600 transition-colors">
-                    <i data-lucide="message-circle" class="w-5 h-5 mr-3"></i> Nhắn tin qua Zalo cho mình nha!
+                <a href="https://zalo.me/0379602647" target="_blank" class="flex items-center justify-center w-full bg-blue-500 text-white font-bold py-3 px-4 rounded-xl hover:bg-blue-600 transition-colors shadow-md hover:-translate-y-1">
+                    <i data-lucide="message-circle" class="w-5 h-5 mr-3"></i> Chat Zalo
                 </a>
-                <a href="https://www.facebook.com/tuyen.tu.12979431" target="_blank" class="flex items-center justify-center w-full bg-indigo-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-indigo-700 transition-colors">
-                    <i data-lucide="facebook" class="w-5 h-5 mr-3"></i> Ib qua Facebook!
+                <a href="https://www.facebook.com/tuyen.tu.12979431" target="_blank" class="flex items-center justify-center w-full bg-indigo-600 text-white font-bold py-3 px-4 rounded-xl hover:bg-indigo-700 transition-colors shadow-md hover:-translate-y-1">
+                    <i data-lucide="facebook" class="w-5 h-5 mr-3"></i> Facebook
                 </a>
             </div>
         </div>
     </div>
     
-    <footer class="text-center my-12 text-gray-400"><p>&copy; 2025 Tiệm Hoa Tươi TMT. Chúc các bạn tìm được bó hoa thật đẹp và ý nghĩa :3</p></footer>
+    <footer class="bg-white border-t border-gray-100 mt-20">
+        <div class="container mx-auto py-8 text-center text-gray-500">
+            <p class="font-serif text-lg text-gray-700 font-bold mb-2">Tiệm Hoa Tươi TMT</p>
+            <p class="text-sm">&copy; 2025 - All rights reserved.</p>
+        </div>
+    </footer>
+
+    <button id="chat-toggle-btn" class="fixed bottom-24 right-5 bg-white text-pink-600 p-4 rounded-full shadow-xl z-40 border-2 border-pink-100 hover:bg-pink-50 transition-all hover:scale-110 group">
+        <span class="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full animate-bounce">1</span>
+        <i data-lucide="message-square-heart" class="w-6 h-6"></i>
+        <span class="absolute right-full mr-3 top-1/2 -translate-y-1/2 bg-gray-800 text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+            Chat với AI Florist
+        </span>
+    </button>
+
+    <div id="chat-widget" class="fixed bottom-5 right-5 w-full max-w-[350px] bg-white rounded-2xl shadow-2xl z-50 hidden border border-pink-100 flex flex-col overflow-hidden transition-all duration-300 transform scale-95 opacity-0 origin-bottom-right" style="height: 500px; max-height: 80vh;">
+        <div class="bg-gradient-to-r from-pink-500 to-rose-400 p-4 text-white flex justify-between items-center shadow-md">
+            <div class="flex items-center gap-3">
+                <div class="relative">
+                    <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-pink-500">
+                        <i data-lucide="bot" class="w-6 h-6"></i>
+                    </div>
+                    <div class="absolute bottom-0 right-0 w-3 h-3 bg-green-400 border-2 border-white rounded-full"></div>
+                </div>
+                <div>
+                    <h3 class="font-bold text-sm">TMT AI Florist 🤖</h3>
+                    <p class="text-xs text-pink-100">Luôn sẵn sàng tư vấn!</p>
+                </div>
+            </div>
+            <button id="close-chat-btn" class="text-white/80 hover:text-white hover:bg-white/20 p-1 rounded-full transition-colors">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+        </div>
+
+        <div id="chat-messages" class="flex-1 p-4 overflow-y-auto bg-gray-50 space-y-4">
+            <div class="flex gap-3 items-start">
+                <div class="w-8 h-8 bg-pink-100 rounded-full flex items-center justify-center text-pink-500 flex-shrink-0">
+                    <i data-lucide="bot" class="w-5 h-5"></i>
+                </div>
+                <div class="bg-white p-3 rounded-2xl rounded-tl-none shadow-sm border border-gray-100 text-sm text-gray-700">
+                    Chào bạn! Mình là trợ lý AI của Tiệm Hoa TMT. 🌸<br>
+                    Bạn đang tìm hoa tặng dịp gì (Sinh nhật, Tỏ tình, Khai trương...) hay có ngân sách bao nhiêu không?
+                </div>
+            </div>
+        </div>
+
+        <div class="p-3 bg-white border-t border-gray-100">
+            <div class="flex items-center gap-2 bg-gray-100 rounded-full px-4 py-2 border border-transparent focus-within:border-pink-300 focus-within:bg-white transition-all">
+                <input type="text" id="chat-input" placeholder="VD: Tặng bạn gái 500k..." class="flex-1 bg-transparent outline-none text-sm text-gray-700" autocomplete="off">
+                <button id="send-btn" class="text-pink-500 hover:text-pink-600 p-1 transition-transform active:scale-90">
+                    <i data-lucide="send" class="w-5 h-5"></i>
+                </button>
+            </div>
+            <div class="text-center mt-1">
+                <span class="text-[10px] text-gray-400">Powered by TMT AI Engine</span>
+            </div>
+        </div>
+    </div>
 
     <script>
-        // DANH SÁCH HOA
-        const hoaTuoi = [
-            { id: 1, name: 'Hoa Hồng Đỏ', price: 550000, salePrice: 490000, image: 'images/hoahong.jpg', meaning: 'Biểu tượng của tình yêu nồng cháy, lãng mạn và sự tôn trọng sâu sắc. Hoàn hảo cho các dịp lễ tình nhân, kỷ niệm.' },
-            { id: 2, name: 'Hoa Ly Trắng', price: 480000, image: 'images/hoaly.jpg', meaning: 'Tượng trưng cho sự trong trắng, đức hạnh và thanh cao. Thích hợp để tặng mẹ, bạn bè hoặc trong các dịp trang trọng.' },
-            { id: 3, name: 'Hoa Hướng Dương', price: 450000, image: 'images/hoahuongduong.jpg', meaning: 'Mang ý nghĩa về sự lạc quan, niềm tin và hy vọng. Là món quà tuyệt vời để chúc mừng tốt nghiệp, khai trương.' },
-            { id: 4, name: 'Hoa Cẩm Tú Cầu', price: 620000, image: 'images/camtucau.jpg', meaning: 'Thể hiện lòng biết ơn chân thành và những cảm xúc sâu sắc. Màu sắc hoa có thể thay đổi tùy theo độ pH của đất.' },
-            { id: 5, name: 'Tulip Hà Lan', price: 750000, image: 'images/tulip.jpg', meaning: 'Tượng trưng cho sự giàu có, nổi tiếng và một tình yêu hoàn hảo. Mỗi màu tulip lại mang một thông điệp riêng.' },
-            { id: 6, name: 'Hoa Cúc Tana', price: 400000, image: 'images/cuctana.jpg', meaning: 'Nhỏ xinh, mộc mạc, mang ý nghĩa "Tình yêu thuở ban đầu" hay một tình bạn trong sáng, bền chặt.' },
-            { id: 7, name: 'Hoa Baby Trắng', price: 380000, salePrice: 290000, image: 'images/hoababy.jpg', meaning: 'Biểu tượng của tình yêu tinh khiết, ngây thơ và trong trắng. Thường được dùng làm hoa phụ hoặc một bó hoa riêng.' },
-            { id: 8, name: 'Lan Hồ Điệp', price: 1200000, salePrice: 1000000, image: 'images/lanhodiep.jpg', meaning: 'Sang trọng và quý phái, tượng trưng cho sự giàu sang, thịnh vượng và vẻ đẹp hoàn mỹ. Món quà đẳng cấp cho đối tác.' },
-            { id: 9, name: 'Mẫu Đơn Hồng', price: 850000, image: 'images/maudon.jpg', meaning: 'Biểu tượng cho sự thịnh vượng, sắc đẹp và một cuộc hôn nhân hạnh phúc, viên mãn. Vẻ đẹp kiêu sa, quyến rũ.' },
-            { id: 10, name: 'Oải Hương Khô', price: 420000, image: 'images/oaihuong.jpg', meaning: 'Mang ý nghĩa về sự tinh khiết, nhẹ nhàng và tận tâm. Hương thơm thư giãn, tượng trưng cho sự bình yên.' },
-            { id: 11, name: 'Cẩm Chướng', price: 390000, salePrice: 290000, image: 'images/camchuong.jpg', meaning: 'Tượng trưng cho niềm tự hào, sắc đẹp và sự ái mộ. Mỗi màu sắc lại mang một thông điệp tình cảm khác nhau.' },
-            { id: 12, name: 'Cúc Họa Mi', price: 350000, image: 'images/cuchoami.jpg', meaning: 'Đại diện cho tình yêu thầm lặng, sự trong trắng và tinh khiết của tâm hồn. Vẻ đẹp giản dị, gần gũi.' },
-            { id: 13, name: 'Hoa Sen Trắng', price: 500000, image: 'images/hoasen.jpg', meaning: 'Biểu tượng của sự thanh cao, thuần khiết và giác ngộ. Thể hiện sự tôn kính và bình yên trong tâm hồn.' },
-            { id: 14, name: 'Cát Tường', price: 460000, image: 'images/cattuong.jpg', meaning: 'Mang ý nghĩa "may mắn", là lời chúc cho sự thuận lợi, viên mãn và hạnh phúc trong cuộc sống.' },
-            { id: 15, name: 'Thạch Thảo Tím', price: 370000, image: 'images/thachthao.jpg', meaning: 'Tượng trưng cho một tình yêu chung thủy, không thay đổi và sự nhớ nhung, chờ đợi trong tình yêu.' },
-            { id: 16, name: 'Hoa Rum', price: 580000, image: 'images/rum.jpg', meaning: 'Vẻ đẹp của sự thanh lịch, độc đáo và sự trở về của hạnh phúc. Thích hợp cho các không gian hiện đại.' },
-            { id: 17, name: 'Đồng Tiền', price: 410000, image: 'images/dongtien.jpg', meaning: 'Tượng trưng cho sự hạnh phúc, tươi vui và tài lộc. Mang lại sự rạng rỡ và năng lượng tích cực.' },
-            { id: 18, name: 'Salem Tím', price: 360000, image: 'images/salem.jpg', meaning: 'Là biểu tượng của sự trường tồn và nỗi nhớ không nguôi. Hoa khô giữ được rất lâu, như một kỷ niệm bền vững.' },
-            { id: 19, name: 'Mõm Sói', price: 430000, image: 'images/momsoi.jpg', meaning: 'Đại diện cho sức mạnh, sự duyên dáng và có thể là một chút bí ẩn, che giấu. Mang vẻ đẹp độc đáo, rực rỡ.' },
-            { id: 20, name: 'Thủy Tiên Trắng', price: 490000, image: 'images/thuytien.jpg', meaning: 'Tượng trưng cho sự tái sinh, khởi đầu mới và lòng tự trọng. Vẻ đẹp tinh khôi, kiêu hãnh và hương thơm nhẹ nhàng.' }
-        ];
 
-        let cart = [];
-        const formatCurrency = (number) => new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(number).replace('₫', 'đ');
-
+        // --- CẤU HÌNH RANDOM BACKGROUND ---
         const bodyBackgrounds = [
             'https://www.toptal.com/designers/subtlepatterns/uploads/watercolor.png', 
             'https://images.pexels.com/photos/2079438/pexels-photo-2079438.jpeg?auto=compress&cs=tinysrgb&w=1920', 
             'https://images.pexels.com/photos/39517/rose-flower-blossom-bloom-39517.jpeg?auto=compress&cs=tinysrgb&w=1920' 
         ];
+        
+        // Ảnh chất lượng cao cho Banner Hero
         const bannerBackgrounds = [
+            'https://images.unsplash.com/photo-1490750967868-53cbaa379091?q=80&w=2000', // Ảnh mặc định hiện tại
             'https://images.pexels.com/photos/1166869/pexels-photo-1166869.jpeg?auto=compress&cs=tinysrgb&w=1920', 
             'https://images.pexels.com/photos/931177/pexels-photo-931177.jpeg?auto=compress&cs=tinysrgb&w=1920', 
             'https://images.pexels.com/photos/796620/pexels-photo-796620.jpeg?auto=compress&cs=tinysrgb&w=1920' 
         ];
-        const setRandomBackgrounds = () => {
-            const quizBanner = document.getElementById('quiz-banner');
 
+        const setRandomBackgrounds = () => {
+            // 1. Random nền Body
             const randomBodyBg = bodyBackgrounds[Math.floor(Math.random() * bodyBackgrounds.length)];
             document.body.style.backgroundImage = `url('${randomBodyBg}')`;
             document.body.style.backgroundSize = 'cover';
             document.body.style.backgroundAttachment = 'fixed'; 
 
-            const randomBannerBg = bannerBackgrounds[Math.floor(Math.random() * bannerBackgrounds.length)];
-            quizBanner.style.backgroundImage = `url('${randomBannerBg}')`;
-            quizBanner.style.backgroundSize = 'cover';
-            quizBanner.style.backgroundPosition = 'center';
+            // 2. Random ảnh Banner Hero
+            const heroImg = document.getElementById('hero-image');
+            if (heroImg) {
+                const randomBannerBg = bannerBackgrounds[Math.floor(Math.random() * bannerBackgrounds.length)];
+                heroImg.src = randomBannerBg; 
+            }
         };
+
+        // --- DỮ LIỆU HOA (Giữ nguyên) ---
+        const hoaTuoi = [
+            { id: 1, name: 'Hoa Hồng Đỏ', price: 550000, salePrice: 490000, image: 'images/hoahong.jpg', meaning: 'Biểu tượng của tình yêu nồng cháy.' },
+            { id: 2, name: 'Hoa Ly Trắng', price: 480000, image: 'images/hoaly.jpg', meaning: 'Tượng trưng cho sự trong trắng, đức hạnh.' },
+            { id: 3, name: 'Hoa Hướng Dương', price: 450000, image: 'images/hoahuongduong.jpg', meaning: 'Mang ý nghĩa về sự lạc quan, niềm tin.' },
+            { id: 4, name: 'Hoa Cẩm Tú Cầu', price: 620000, image: 'images/camtucau.jpg', meaning: 'Thể hiện lòng biết ơn chân thành.' },
+            { id: 5, name: 'Tulip Hà Lan', price: 750000, image: 'images/tulip.jpg', meaning: 'Tượng trưng cho sự giàu có, nổi tiếng.' },
+            { id: 6, name: 'Hoa Cúc Tana', price: 400000, image: 'images/cuctana.jpg', meaning: 'Nhỏ xinh, mộc mạc, tình yêu thuở ban đầu.' },
+            { id: 7, name: 'Hoa Baby Trắng', price: 380000, salePrice: 290000, image: 'images/hoababy.jpg', meaning: 'Biểu tượng của tình yêu tinh khiết.' },
+            { id: 8, name: 'Lan Hồ Điệp', price: 1200000, salePrice: 1000000, image: 'images/lanhodiep.jpg', meaning: 'Sang trọng và quý phái.' },
+            { id: 9, name: 'Mẫu Đơn Hồng', price: 850000, image: 'images/maudon.jpg', meaning: 'Biểu tượng cho sự thịnh vượng, sắc đẹp.' },
+            { id: 10, name: 'Oải Hương Khô', price: 420000, image: 'images/oaihuong.jpg', meaning: 'Sự tinh khiết, nhẹ nhàng và tận tâm.' },
+            { id: 11, name: 'Cẩm Chướng', price: 390000, salePrice: 290000, image: 'images/camchuong.jpg', meaning: 'Niềm tự hào, sắc đẹp và sự ái mộ.' },
+            { id: 12, name: 'Cúc Họa Mi', price: 350000, image: 'images/cuchoami.jpg', meaning: 'Tình yêu thầm lặng, sự trong trắng.' },
+            { id: 13, name: 'Hoa Sen Trắng', price: 500000, image: 'images/hoasen.jpg', meaning: 'Sự thanh cao, thuần khiết.' },
+            { id: 14, name: 'Cát Tường', price: 460000, image: 'images/cattuong.jpg', meaning: 'May mắn, viên mãn và hạnh phúc.' },
+            { id: 15, name: 'Thạch Thảo Tím', price: 370000, image: 'images/thachthao.jpg', meaning: 'Tình yêu chung thủy, nhớ nhung.' },
+            { id: 16, name: 'Hoa Rum', price: 580000, image: 'images/rum.jpg', meaning: 'Sự thanh lịch, độc đáo.' },
+            { id: 17, name: 'Đồng Tiền', price: 410000, image: 'images/dongtien.jpg', meaning: 'Hạnh phúc, tươi vui và tài lộc.' },
+            { id: 18, name: 'Salem Tím', price: 360000, image: 'images/salem.jpg', meaning: 'Sự trường tồn và nỗi nhớ.' },
+            { id: 19, name: 'Mõm Sói', price: 430000, image: 'images/momsoi.jpg', meaning: 'Sức mạnh, sự duyên dáng.' },
+            { id: 20, name: 'Thủy Tiên Trắng', price: 490000, image: 'images/thuytien.jpg', meaning: 'Sự tái sinh, khởi đầu mới.' }
+        ];
+
+        let cart = [];
+        const formatCurrency = (number) => new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(number).replace('₫', 'đ');
+
+        // --- THAM CHIẾU PHẦN TỬ ---
 
         const productGrid = document.getElementById('product-grid');
         const cartItemsContainer = document.getElementById('cart-items');
@@ -148,54 +271,62 @@
         const totalPriceElement = document.getElementById('total-price');
         const checkoutButton = document.getElementById('checkout-button');
         const contactModal = document.getElementById('contact-modal');
-        const quizModalContainer = document.getElementById('quiz-modal');
         
+        // --- RENDER SẢN PHẨM ---
         const renderProducts = () => {
             productGrid.innerHTML = hoaTuoi.map(product => {
                 const priceHTML = product.salePrice
                     ? `<div>
-                           <span class="text-lg font-semibold text-red-600">${formatCurrency(product.salePrice)}</span>
-                           <span class="text-sm font-light text-gray-500 line-through ml-2">${formatCurrency(product.price)}</span>
+                           <span class="text-lg font-bold text-red-500">${formatCurrency(product.salePrice)}</span>
+                           <span class="text-sm text-gray-400 line-through ml-2">${formatCurrency(product.price)}</span>
                        </div>`
-                    : `<span class="text-lg font-semibold text-pink-600">${formatCurrency(product.price)}</span>`;
+                    : `<span class="text-lg font-bold text-gray-800">${formatCurrency(product.price)}</span>`;
                 
                 return `
-                <div class="group bg-white/80 backdrop-blur-md rounded-2xl shadow-lg ring-1 ring-black ring-opacity-5 flex flex-col overflow-hidden">
-                    <div class="overflow-hidden">
-                        <img src="${product.image}" alt="${product.name}" class="w-full h-64 object-cover product-image-zoom">
+                <div class="group bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100">
+                    <div class="overflow-hidden relative h-64">
+                        <img src="${product.image}" alt="${product.name}" class="w-full h-full object-cover product-image-zoom">
+                        <div class="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-all"></div>
+                        <button onclick="addToCart(${product.id})" class="absolute bottom-4 right-4 bg-white text-pink-600 p-3 rounded-full shadow-lg translate-y-12 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 hover:bg-pink-600 hover:text-white">
+                            <i data-lucide="shopping-bag" class="w-5 h-5"></i>
+                        </button>
                     </div>
-                    <div class="p-5 flex flex-col flex-grow">
-                        <h3 class="text-xl font-bold text-gray-800">${product.name}</h3>
-                        <p class="text-gray-500 mt-2 text-sm flex-grow">${product.meaning}</p>
-                        <div class="flex justify-between items-center mt-4">
+                    <div class="p-5">
+                        <h3 class="text-lg font-bold text-gray-800 mb-1 group-hover:text-pink-600 transition-colors">${product.name}</h3>
+                        <p class="text-gray-500 text-sm mb-3 line-clamp-1">${product.meaning}</p>
+                        <div class="flex justify-between items-end">
                             ${priceHTML}
-                            <button onclick="addToCart(${product.id})" class="bg-pink-50 text-pink-600 font-semibold px-4 py-2 rounded-lg hover:bg-pink-100 transition-colors duration-200">
-                                Thêm vào giỏ
-                            </button>
                         </div>
                     </div>
                 </div>`;
             }).join('');
         };
 
+        // --- GIỎ HÀNG ---
         const renderCart = () => {
             if (cart.length === 0) {
                 cartItemsContainer.innerHTML = '';
                 emptyCartMessage.style.display = 'block';
                 checkoutButton.disabled = true;
+                checkoutButton.classList.add('bg-gray-400', 'cursor-not-allowed');
+                checkoutButton.classList.remove('bg-gray-800', 'hover:bg-gray-900');
             } else {
                 emptyCartMessage.style.display = 'none';
                 checkoutButton.disabled = false;
+                checkoutButton.classList.remove('bg-gray-400', 'cursor-not-allowed');
+                checkoutButton.classList.add('bg-gray-800', 'hover:bg-gray-900');
+                
                 cartItemsContainer.innerHTML = cart.map(item => `
-                    <div class="flex justify-between items-center">
-                        <div>
-                            <p class="font-semibold">${item.name}</p>
-                            <p class="text-sm text-gray-500">${formatCurrency(item.price)}</p>
+                    <div class="flex items-center gap-3 bg-gray-50 p-2 rounded-xl animate-fade-up" style="animation-duration: 0.3s">
+                        <img src="${item.image}" class="w-12 h-12 object-cover rounded-lg">
+                        <div class="flex-1">
+                            <p class="font-bold text-sm text-gray-800 line-clamp-1">${item.name}</p>
+                            <p class="text-xs text-pink-600 font-bold">${formatCurrency(item.price)}</p>
                         </div>
-                        <div class="flex items-center gap-3">
-                            <button onclick="updateQuantity(${item.cartId}, -1)" class="w-6 h-6 bg-gray-200 rounded-full font-bold flex items-center justify-center">-</button>
-                            <span>${item.quantity}</span>
-                            <button onclick="updateQuantity(${item.cartId}, 1)" class="w-6 h-6 bg-gray-200 rounded-full font-bold flex items-center justify-center">+</button>
+                        <div class="flex items-center gap-1 bg-white rounded-lg border border-gray-200 p-1">
+                            <button onclick="updateQuantity(${item.cartId}, -1)" class="w-6 h-6 hover:bg-gray-100 rounded text-gray-600 flex items-center justify-center">-</button>
+                            <span class="text-xs font-bold w-4 text-center">${item.quantity}</span>
+                            <button onclick="updateQuantity(${item.cartId}, 1)" class="w-6 h-6 hover:bg-gray-100 rounded text-gray-600 flex items-center justify-center">+</button>
                         </div>
                     </div>`).join('');
             }
@@ -238,84 +369,25 @@
                 });
             }
             renderCart();
+            // Hiệu ứng rung nhẹ giỏ hàng
+            const cartIcon = document.querySelector('.lucide-shopping-cart');
+            if(cartIcon) {
+                cartIcon.parentElement.classList.add('animate-bounce');
+                setTimeout(() => cartIcon.parentElement.classList.remove('animate-bounce'), 1000);
+            }
         };
 
         window.openContactModal = () => contactModal.classList.remove('hidden');
         window.closeContactModal = () => contactModal.classList.add('hidden');
 
-        let quizAnswers = {};
-        const quizSteps = [
-            { key: 'occasion', question: 'Bạn mua hoa cho dịp gì hoặc tặng cho ai?', options: ['Tặng người yêu', 'Tặng Mẹ/Gia đình', 'Chúc mừng bạn bè', 'Tặng đối tác'] },
-            { key: 'message', question: 'Bạn muốn gửi gắm thông điệp gì?', options: ['Yêu thương nồng cháy', 'Lòng biết ơn', 'Niềm vui & Lạc quan', 'Sự sang trọng'] },
-            { key: 'style', question: 'Bạn thích phong cách nào?', options: ['Rực rỡ & nổi bật', 'Nhẹ nhàng & tinh tế', 'Đơn giản & mộc mạc'] }
-        ];
-
-        const getFlowerRecommendation = () => {
-            const { occasion, message, style } = quizAnswers;
-
-            if (occasion === 'Tặng người yêu' && message === 'Yêu thương nồng cháy') return { product: hoaTuoi.find(p => p.id === 1), customName: "Tình Yêu Vĩnh Cửu" };
-            if (occasion === 'Tặng Mẹ/Gia đình' && message === 'Lòng biết ơn') return { product: hoaTuoi.find(p => p.id === 4), customName: "Lời Cảm Ơn Chân Thành" };
-            if (occasion === 'Chúc mừng bạn bè' && message === 'Niềm vui & Lạc quan') return { product: hoaTuoi.find(p => p.id === 3), customName: "Nắng Vàng Rực Rỡ" };
-            if (occasion === 'Tặng đối tác' && message === 'Sự sang trọng') return { product: hoaTuoi.find(p => p.id === 8), customName: "Thịnh Vượng & Thành Công" };
-            if (style === 'Nhẹ nhàng & tinh tế') return { product: hoaTuoi.find(p => p.id === 2), customName: "Nét Đẹp Thuần Khiết" };
-            if (style === 'Đơn giản & mộc mạc') return { product: hoaTuoi.find(p => p.id === 6), customName: "Giản Dị Yêu Thương" };
-            return { product: hoaTuoi.find(p => p.id === 14), customName: "May Mắn & An Lành" };
-        };
-
-        const renderQuizStep = (stepIndex) => {
-            if (stepIndex >= quizSteps.length) {
-                const recommendation = getFlowerRecommendation();
-                const priceToUse = recommendation.product.salePrice || recommendation.product.price;
-                quizModalContainer.innerHTML = `
-                <div class="bg-white rounded-2xl shadow-xl p-8 w-full max-w-md text-center">
-                    <h2 class="text-2xl font-bold text-gray-800">Bó hoa dành cho bạn:</h2>
-                    <p class="text-3xl font-bold text-pink-600 my-4">${recommendation.customName}</p>
-                    <img src="${recommendation.product.image}" class="w-48 h-48 object-cover rounded-full mx-auto my-4 shadow-lg">
-                    <p class="text-gray-600 mb-6">Dựa trên lựa chọn của bạn, <strong>${recommendation.product.name}</strong> là phù hợp nhất!</p>
-                    <button id="add-reco-to-cart" class="w-full bg-pink-500 text-white font-bold py-3 rounded-lg mb-2 hover:bg-pink-600">
-                        Thêm vào giỏ (${formatCurrency(priceToUse)})
-                    </button>
-                    <button onclick="closeQuizModal()" class="w-full text-gray-500 font-semibold py-2">Để sau</button>
-                </div>`;
-                document.getElementById('add-reco-to-cart').addEventListener('click', () => {
-                    addToCart(recommendation.product.id, recommendation.customName);
-                    closeQuizModal();
-                });
-                return;
-            }
-            const step = quizSteps[stepIndex];
-            quizModalContainer.innerHTML = `
-            <div class="bg-white rounded-2xl shadow-xl p-8 w-full max-w-md">
-                <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-xl font-bold text-gray-800">${step.question}</h2>
-                    <button onclick="closeQuizModal()" class="text-gray-400 hover:text-gray-600"><i data-lucide="x" class="w-6 h-6"></i></button>
-                </div>
-                <div class="space-y-3">
-                    ${step.options.map(opt => `<button class="quiz-option w-full text-left p-4 border-2 rounded-lg transition-all" data-value="${opt}">${opt}</button>`).join('')}
-                </div>
-            </div>`;
-            lucide.createIcons();
-            document.querySelectorAll('.quiz-option').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    quizAnswers[step.key] = btn.dataset.value;
-                    renderQuizStep(stepIndex + 1);
-                });
-            });
-        };
-        window.closeQuizModal = () => quizModalContainer.classList.add('hidden');
-        //Event Listener
+        // --- KHỞI TẠO ---
         document.addEventListener('DOMContentLoaded', () => {
             setRandomBackgrounds();
             renderProducts();
             renderCart();
             
             document.getElementById('contact-button').addEventListener('click', openContactModal);
-            document.getElementById('show-quiz-button').addEventListener('click', () => {
-                quizAnswers = {};
-                renderQuizStep(0); 
-                quizModalContainer.classList.remove('hidden');
-            });
-
+            
             document.getElementById('checkout-button').addEventListener('click', () => {
                 if (cart.length > 0) {
                     localStorage.setItem('shoppingCart', JSON.stringify(cart));
@@ -324,6 +396,132 @@
             });
             lucide.createIcons();
         });
+
+        // --- LOGIC CHATBOT AI ---
+        const chatToggleBtn = document.getElementById('chat-toggle-btn');
+        const chatWidget = document.getElementById('chat-widget');
+        const closeChatBtn = document.getElementById('close-chat-btn');
+        const chatInput = document.getElementById('chat-input');
+        const sendBtn = document.getElementById('send-btn');
+        const messagesBox = document.getElementById('chat-messages');
+
+        const toggleChat = () => {
+            const isHidden = chatWidget.classList.contains('hidden');
+            if (isHidden) {
+                chatWidget.classList.remove('hidden');
+                setTimeout(() => chatWidget.classList.remove('scale-95', 'opacity-0'), 10);
+                chatInput.focus();
+            } else {
+                chatWidget.classList.add('scale-95', 'opacity-0');
+                setTimeout(() => chatWidget.classList.add('hidden'), 300);
+            }
+        };
+
+        chatToggleBtn.addEventListener('click', toggleChat);
+        closeChatBtn.addEventListener('click', toggleChat);
+
+        const addMessage = (text, sender, product = null) => {
+            const div = document.createElement('div');
+            div.className = `flex gap-3 ${sender === 'user' ? 'flex-row-reverse' : ''} items-start`; 
+            
+            let avatar = sender === 'bot' 
+                ? `<div class="w-8 h-8 bg-pink-100 rounded-full flex items-center justify-center text-pink-500 flex-shrink-0"><i data-lucide="bot" class="w-5 h-5"></i></div>`
+                : `<div class="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center text-gray-600 flex-shrink-0"><i data-lucide="user" class="w-5 h-5"></i></div>`;
+                
+            let bubbleClass = sender === 'bot' 
+                ? 'bg-white text-gray-700 rounded-tl-none border border-gray-100' 
+                : 'bg-pink-500 text-white rounded-tr-none';
+
+            let contentHtml = `<div class="flex flex-col gap-2 max-w-[75%]">
+                <div class="${bubbleClass} p-3 rounded-2xl shadow-sm text-sm">
+                    <p>${text}</p>
+                </div>`;
+
+            if (product) {
+                const price = product.salePrice || product.price;
+                contentHtml += `
+                <div class="bg-white border border-pink-100 rounded-xl overflow-hidden shadow-md group cursor-pointer hover:shadow-lg transition-all w-full" onclick="addToCart(${product.id})">
+                    <div class="h-24 overflow-hidden relative">
+                        <img src="${product.image}" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-2">
+                        <p class="font-bold text-xs text-gray-800 truncate">${product.name}</p>
+                        <p class="text-pink-600 font-bold text-xs">${formatCurrency(price)}</p>
+                        <button class="w-full mt-2 bg-pink-50 text-pink-600 text-xs py-1 rounded hover:bg-pink-100 font-semibold">Thêm vào giỏ</button>
+                    </div>
+                </div>`;
+            }
+            
+            contentHtml += `</div>`;
+            div.innerHTML = sender === 'user' ? (contentHtml + avatar) : (avatar + contentHtml);
+            messagesBox.appendChild(div);
+            messagesBox.scrollTop = messagesBox.scrollHeight;
+            lucide.createIcons(); 
+        };
+
+        const handleUserChat = () => {
+            const text = chatInput.value.trim().toLowerCase();
+            if (!text) return;
+            addMessage(chatInput.value, 'user');
+            chatInput.value = '';
+            
+            const loadingId = 'typing-' + Date.now();
+            const loadingHtml = `<div id="${loadingId}" class="flex gap-3"><div class="w-8 h-8 bg-pink-100 rounded-full flex items-center justify-center text-pink-500"><i data-lucide="bot" class="w-5 h-5"></i></div><div class="bg-white p-3 rounded-2xl rounded-tl-none border border-gray-100 text-sm text-gray-400 italic">Đang suy nghĩ...</div></div>`;
+            messagesBox.insertAdjacentHTML('beforeend', loadingHtml);
+            messagesBox.scrollTop = messagesBox.scrollHeight;
+            lucide.createIcons();
+
+            setTimeout(() => {
+                document.getElementById(loadingId).remove();
+                let responseText = "";
+                let suggestedProduct = null;
+                const numbers = text.match(/\d+/g);
+                let budget = numbers ? parseInt(numbers.join('')) : null;
+                if (budget && budget < 10000) budget = budget * 1000;
+
+                if (text.includes('sinh nhật') || text.includes('bạn gái') || text.includes('yêu')) {
+                    suggestedProduct = hoaTuoi.find(p => p.name.includes('Hồng') && (!budget || (p.salePrice || p.price) <= budget));
+                    responseText = "Sinh nhật hay dịp lãng mạn thì Hoa Hồng là tuyệt nhất rồi! Mình tìm thấy bó này rất hợp ý bạn:";
+                } 
+                else if (text.includes('mẹ') || text.includes('biết ơn') || text.includes('gia đình')) {
+                    suggestedProduct = hoaTuoi.find(p => (p.name.includes('Ly') || p.name.includes('Cẩm Tú')) && (!budget || (p.salePrice || p.price) <= budget));
+                    responseText = "Tặng Mẹ thì cần sự trang trọng và ấm áp. Bạn xem thử mẫu này nhé:";
+                }
+                else if (text.includes('khai trương') || text.includes('tốt nghiệp') || text.includes('bạn')) {
+                    suggestedProduct = hoaTuoi.find(p => p.name.includes('Hướng Dương') && (!budget || (p.salePrice || p.price) <= budget));
+                    responseText = "Chúc mừng thì Hướng Dương là số 1! Mang lại năng lượng tích cực lắm luôn:";
+                }
+                else if (text.includes('buồn') || text.includes('xin lỗi')) {
+                    suggestedProduct = hoaTuoi.find(p => p.name.includes('Baby') || p.name.includes('Cúc'));
+                    responseText = "Một chút nhẹ nhàng để xoa dịu tâm hồn. Mẫu này rất tinh tế:";
+                }
+                else if (text.includes('sang trọng') || text.includes('đối tác') || text.includes('quan trọng')) {
+                // Ưu tiên Lan Hồ Điệp
+                    suggestedProduct = hoaTuoi.find(p => p.name.includes('Lan Hồ Điệp') && (!budget || (p.salePrice || p.price) <= budget));
+                    responseText = "Đối tác quan trọng thì phải chọn Lan Hồ Điệp mới xứng tầm nhé:";
+                }
+                else if (text.includes('tình yêu') || text.includes('lãng mạn')) {
+                    suggestedProduct = hoaTuoi.find(p => p.name.includes('Hồng') && (!budget || (p.salePrice || p.price) <= budget));
+                    responseText = "Tình yêu thì không thể thiếu Hoa Hồng được rồi! Mình gợi ý bó này cho bạn:";
+                }
+                else if (text.includes('may mắn') || text.includes('an lành')) {
+                    suggestedProduct = hoaTuoi.find(p => p.name.includes('Cát Tường') && (!budget || (p.salePrice || p.price) <= budget));
+                    responseText = "Chúc bạn may mắn với bó Cát Tường này nhé:";
+                }   
+                if (!suggestedProduct && budget) {
+                    suggestedProduct = hoaTuoi.find(p => (p.salePrice || p.price) <= budget);
+                    responseText = `Với ngân sách khoảng ${formatCurrency(budget)}, mình thấy bó này "ngon-bổ-rẻ" nhất nè:`;
+                }
+                if (!suggestedProduct) {
+                    suggestedProduct = hoaTuoi[Math.floor(Math.random() * 3)]; 
+                    responseText = "Câu này hơi khó với mình 😅. Nhưng nếu bạn đang tìm bó hoa 'best seller' tại tiệm thì xem thử em này nha:";
+                }
+                addMessage(responseText, 'bot', suggestedProduct);
+            }, 1500);
+        };
+
+        chatInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') handleUserChat(); });
+        sendBtn.addEventListener('click', handleUserChat);
     </script>
 </body>
 </html>
