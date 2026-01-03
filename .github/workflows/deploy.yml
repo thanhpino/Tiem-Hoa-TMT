@@ -1,4 +1,4 @@
-name: CI/CD Pipeline - Tiem Hoa Tuoi
+name: CI/CD Tiem Hoa Tuoi
 
 # Kịch bản chạy khi có code push vào nhánh main
 on:
@@ -30,8 +30,8 @@ jobs:
     - name: Login to Docker Hub
       uses: docker/login-action@v3
       with:
-        username: ${{ secrets.pinovn }}
-        password: ${{ secrets.DOCKER_HUB_PASSWORD }}
+        username: pinovn
+        password: ${{ secrets.PINOVN }}
 
     # 5. Build Docker Image và Đẩy lên Docker Hub
     - name: Build and Push Docker Image
@@ -40,4 +40,4 @@ jobs:
         context: .
         push: true
         # Sửa 'tên_user_của_bro' thành tên thật trên Docker Hub nhé
-        tags: ${{ secrets.pinovn }}/tiem-hoa-tuoi-backend:latest
+        tags: pinovn/tiem-hoa-tuoi-backend:latest
