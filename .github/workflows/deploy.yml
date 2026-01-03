@@ -41,3 +41,6 @@ jobs:
         push: true
         # Sửa 'tên_user_của_bro' thành tên thật trên Docker Hub nhé
         tags: pinovn/tiem-hoa-tuoi-backend:latest
+    # 6. Báo cho Render
+    - name: Trigger Render Deploy
+      run: curl "${{ secrets.RENDER_DEPLOY }}"
