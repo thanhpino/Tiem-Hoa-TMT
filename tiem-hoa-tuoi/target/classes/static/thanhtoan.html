@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thanh toán - Tiệm Hoa Tươi TMT</title>
+    <link rel="icon" href="images/paymentfvc.png" type="image/png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script> 
+    <script src="https://www.paypal.com/sdk/js?client-id=AU-h8a9Gg74tcWPBGoLNSg7e2L5NjQVwykNNgjJH35iheuv9eJwq9m60Er0_ovG30ZO54IoBgcZz5V7e&currency=USD"></script>
+    <style>
+        body { font-family: 'Quicksand', sans-serif; }
+        h1, h2, h3 { font-family: 'Playfair Display', serif; }
+        button:disabled { background-color: #9ca3af; cursor: not-allowed; }
+        .selected-payment { border-color: #ec4899; background-color: #fdf2f8; }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800">
+    <div class="container mx-auto p-4 sm:p-6 lg:p-8 max-w-4xl">
+        <div id="checkout-content">
+            <header class="text-center mb-10">
+                <h1 class="text-4xl font-bold text-pink-600">Xác Nhận Đơn Hoa</h1>
+                <p class="text-slate-500 mt-2 text-lg">Vui lòng kiểm tra lại giỏ hoa và hoàn tất thanh toán nhé!</p>
+            </header>
+
+            <div class="bg-white p-8 rounded-2xl shadow-lg">
+                <h2 class="text-2xl font-semibold mb-6 border-b pb-4 text-slate-700">Chi tiết đơn hàng</h2>
+                <div id="order-items" class="space-y-4 mb-6"></div>
+                <div class="mb-8">
+                    <h2 class="text-2xl font-semibold mb-4 text-slate-700">Thông tin giao hàng</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="col-span-2 md:col-span-1">
+                            <label class="block text-sm font-medium text-slate-700 mb-1">Họ và tên <span class="text-red-500">*</span></label>
+                            <input type="text" id="customerName" placeholder="Ví dụ: Nguyễn Văn A" 
+                                class="w-full p-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all">
+                        </div>
+
+                        <div class="col-span-2 md:col-span-1">
+                            <label class="block text-sm font-medium text-slate-700 mb-1">Số điện thoại <span class="text-red-500">*</span></label>
+                            <input type="tel" id="customerPhone" placeholder="Ví dụ: 0912345678" 
+                                class="w-full p-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all">
+                        </div>
+
+                        <div class="col-span-2">
+                            <label class="block text-sm font-medium text-slate-700 mb-1">Địa chỉ nhận hoa <span class="text-red-500">*</span></label>
+                            <input type="text" id="deliveryAddress" placeholder="Số nhà, tên đường, phường, quận..." 
+                                class="w-full p-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all">
+                        </div>
+
+                        <div class="col-span-2">
+                            <label class="block text-sm font-medium text-slate-700 mb-1">Lời nhắn / Ghi chú (Nếu có)</label>
+                            <textarea id="orderNote" rows="2" placeholder="Giao giờ hành chính, viết thiệp chúc mừng..." 
+                                class="w-full p-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="border-t pt-4 mb-8">
+                    <div class="flex justify-between items-center text-xl font-bold">
+                        <span>Tổng cộng:</span>
+                        <span id="total-price" class="text-pink-600">0đ</span>
+                    </div>
+                </div>
+
+                <h2 class="text-2xl font-semibold mb-6 border-b pb-4 text-slate-700">Chọn phương thức thanh toán</h2>
+                <div class="space-y-4 mb-8">
+                     <button data-method="cod" class="payment-method w-full flex justify-between items-center p-4 border-2 rounded-lg transition-all text-left">
+                        <div class="flex items-center">
+                            <i data-lucide="truck" class="w-8 h-8 mr-4 text-slate-500 flex-shrink-0"></i>
+                            <div>
+                                <p class="font-semibold">Thanh toán khi nhận hoa (COD)</p>
+                                <p class="text-sm text-slate-500">Thanh toán bằng tiền mặt khi shipper giao hoa tận nơi.</p>
+                            </div>
+                        </div>
+                        <i data-lucide="check-circle-2" class="w-6 h-6 text-pink-500 hidden ml-4"></i>
+                    </button>
+                     <button data-method="momo" class="payment-method w-full flex justify-between items-center p-4 border-2 rounded-lg transition-all text-left">
+                        <div class="flex items-center">
+                            <img src="images/momoicon.png" class="w-8 h-8 mr-4"/>
+                            <div>
+                                <p class="font-semibold">Thanh toán qua Ví MoMo</p>
+                                <p class="text-sm text-slate-500">Quét mã QR để thanh toán.</p>
+                            </div>
+                        </div>
+                        <i data-lucide="check-circle-2" class="w-6 h-6 text-pink-500 hidden ml-4"></i>
+                    </button>
+                    <button data-method="zalopay" class="payment-method w-full flex justify-between items-center p-4 border-2 rounded-lg transition-all text-left">
+                        <div class="flex items-center">
+                            <img src="images/zaloicon.png" class="w-8 h-8 mr-4 rounded-md"/>
+                            <div>
+                                <p class="font-semibold">Thanh toán qua ZaloPay</p>
+                                <p class="text-sm text-slate-500">Thanh toán an toàn với ZaloPay.</p>
+                            </div>
+                        </div>
+                        <i data-lucide="check-circle-2" class="w-6 h-6 text-pink-500 hidden ml-4"></i>
+                    </button>
+                    <button data-method="paypal" class="payment-method w-full flex justify-between items-center p-4 border-2 rounded-lg transition-all text-left">
+                        <div class="flex items-center">
+                            <i data-lucide="credit-card" class="w-8 h-8 mr-4 text-slate-500 flex-shrink-0"></i>
+                            <div>
+                                <p class="font-semibold">PayPal hoặc Thẻ quốc tế</p>
+                                <p class="text-sm text-slate-500">Sử dụng tài khoản PayPal hoặc thẻ Visa, Mastercard.</p>
+                            </div>
+                        </div>
+                        <i data-lucide="check-circle-2" class="w-6 h-6 text-pink-500 hidden ml-4"></i>
+                    </button>
+                </div>
+
+                <div id="paypal-button-container" class="hidden"></div>
+                <button id="confirm-payment-button" class="w-full bg-pink-500 text-white font-bold py-3 rounded-lg mt-6 hover:bg-pink-600 transition-colors duration-300 shadow-md hidden" disabled>
+                    Hoàn tất đặt hoa
+                </button>
+            </div>
+        </div>
+        <div id="thank-you-message" class="hidden text-center p-10 bg-white rounded-2xl shadow-lg">
+            <h1 class="text-4xl font-bold text-pink-600 mb-4">Đặt hoa thành công!</h1>
+            <p id="final-message" class="text-slate-600 text-lg mb-8"></p>
+            <a href="index.html" class="bg-pink-500 text-white font-bold py-3 px-8 rounded-lg hover:bg-pink-600 transition-colors">
+                Quay về trang chủ
+            </a>
+        </div>
+    </div>
+    
+    <div id="payment-simulation-modal" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center p-4 hidden z-50">
+        <div class="bg-white rounded-2xl shadow-xl p-8 w-full max-w-sm text-center">
+            <h2 class="text-xl font-bold text-gray-800 mb-4">Xác nhận thanh toán</h2>
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://github.com/trantien-2004" class="w-48 h-48 mx-auto" alt="QR Code">
+            <p class="text-sm text-slate-500 mt-4">
+                <i data-lucide="loader" class="inline-block w-4 h-4 animate-spin mr-2"></i>
+                Đây là màn hình giả lập, giao dịch sẽ tự động xác nhận sau <span id="countdown-timer" class="font-bold">5</span> giây...
+            </p>
+        </div>
+    </div>
+
+    <script>
+    const formatCurrency = (number) => new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(number).replace('₫', 'đ');
+    
+        // Hàm gửi đơn hàng về Java Spring Boot
+    // Hàm kiểm tra form có hợp lệ không
+    function validateForm() {
+        const name = document.getElementById('customerName').value.trim();
+        const phone = document.getElementById('customerPhone').value.trim();
+        const address = document.getElementById('deliveryAddress').value.trim();
+
+        if (!name) {
+            alert("Vui lòng nhập họ tên người nhận!");
+            document.getElementById('customerName').focus();
+            return false;
+        }
+        if (!phone) {
+            alert("Vui lòng nhập số điện thoại để shipper liên hệ!");
+            document.getElementById('customerPhone').focus();
+            return false;
+        }
+        // Validate sđt đơn giản (10 số)
+        const phoneRegex = /((09|03|07|08|05)+([0-9]{8})\b)/g;
+        if (!phoneRegex.test(phone)) {
+             alert("Số điện thoại không hợp lệ!");
+             document.getElementById('customerPhone').focus();
+             return false;
+        }
+
+        if (!address) {
+            alert("Vui lòng nhập địa chỉ giao hàng!");
+            document.getElementById('deliveryAddress').focus();
+            return false;
+        }
+        return true;
+    }
+
+    // Hàm gửi đơn hàng về Java Spring Boot (Phiên bản PRO)
+    async function guiDonHangVeBackend(paymentMethod, totalAmount) {
+        // Lấy dữ liệu thật từ form
+        const name = document.getElementById('customerName').value.trim();
+        const phone = document.getElementById('customerPhone').value.trim();
+        const address = document.getElementById('deliveryAddress').value.trim();
+        const userNote = document.getElementById('orderNote').value.trim();
+
+        // Ghép ghi chú của khách với phương thức thanh toán
+        const finalNote = `${userNote ? userNote + " | " : ""}Thanh toán: ${paymentMethod.toUpperCase()}`;
+
+        const orderData = {
+            customerName: name,
+            phone: phone,
+            address: address,
+            note: finalNote,
+            totalAmount: totalAmount,
+            status: "MOI_TAO" // Trạng thái mặc định
+        };
+
+        try {
+            const response = await fetch('/api/orders/create', { 
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(orderData)
+            });
+
+            if (response.ok) {
+                console.log("✅ Đã lưu đơn hàng thành công!");
+                return true; // Trả về true để báo thành công
+            } else {
+                console.error("❌ Lỗi khi lưu đơn hàng");
+                alert("Hệ thống đang bận, vui lòng thử lại sau!");
+                return false;
+            }
+        } catch (error) {
+            console.error("❌ Lỗi kết nối Server:", error);
+            alert("Không thể kết nối đến máy chủ!");
+            return false;
+        }
+    }
+
+
+
+
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const orderItemsContainer = document.getElementById('order-items');
+        const totalPriceElement = document.getElementById('total-price');
+        const checkoutContent = document.getElementById('checkout-content');
+        const thankYouMessage = document.getElementById('thank-you-message');
+        const finalMessage = document.getElementById('final-message');
+        const paymentMethods = document.querySelectorAll('.payment-method');
+        const confirmButton = document.getElementById('confirm-payment-button');
+        const paypalContainer = document.getElementById('paypal-button-container');
+        const paymentSimulationModal = document.getElementById('payment-simulation-modal');
+        let selectedPaymentMethod = null;
+        let total = 0;
+
+        const cartData = localStorage.getItem('shoppingCart');
+        const cart = cartData ? JSON.parse(cartData) : [];
+        
+        if (cart.length === 0){
+            checkoutContent.innerHTML = '<p class="text-center text-slate-500">Giỏ hoa của bạn đang trống. <a href="index.html" class="text-pink-500 hover:underline">Quay lại chọn hoa</a></p>';
+            return;
+        }
+
+        cart.forEach(item => {
+            orderItemsContainer.innerHTML += `
+                <div class="flex justify-between items-center">
+                    <div>
+                        <p class="font-semibold">${item.name} <span class="text-slate-500 font-normal">x${item.quantity}</span></p>
+                        <p class="text-sm text-slate-500">${formatCurrency(item.price)}</p>
+                    </div>
+                    <p class="font-semibold">${formatCurrency(item.price * item.quantity)}</p>
+                </div>
+            `;
+            total += item.price * item.quantity;
+        });
+        totalPriceElement.textContent = formatCurrency(total);
+
+        const showThankYouScreen = (paymentMethodName, transactionId = null) => {
+            checkoutContent.classList.add('hidden');
+            thankYouMessage.classList.remove('hidden');
+            let message = `Đơn hàng của bạn đã được xác nhận! TMT Florist sẽ chuẩn bị và giao hoa sớm nhất.`;
+            if (transactionId) {
+                message = `Thanh toán thành công qua ${paymentMethodName}! Cảm ơn bạn đã tin tưởng Tiệm Hoa Tươi TMT.<br>Mã giao dịch của bạn là: ${transactionId}`;
+            } else if (paymentMethodName === 'COD') {
+                message = `Đơn hoa của bạn đã được xác nhận! Mình sẽ chuẩn bị và giao hoa sớm nhất.<br>Vui lòng chuẩn bị <strong>${formatCurrency(total)}</strong> để thanh toán khi nhận hàng.`;
+            }
+            finalMessage.innerHTML = message;
+            localStorage.removeItem('shoppingCart');
+        };
+
+        const openSimulationModal = (method, amount) => {
+            paymentSimulationModal.classList.remove('hidden');
+            lucide.createIcons();
+            let countdown = 5;
+            const timerEl = document.getElementById('countdown-timer');
+            timerEl.textContent = countdown;
+            const interval = setInterval(() => {
+                countdown--;
+                timerEl.textContent = countdown;
+                if (countdown <= 0) {
+                    clearInterval(interval);
+                    paymentSimulationModal.classList.add('hidden');
+                    showThankYouScreen(method === 'momo' ? 'Ví MoMo' : 'ZaloPay');
+                }
+            }, 1000);
+        };
+
+        paymentMethods.forEach(button => {
+            button.addEventListener('click', () => {
+                selectedPaymentMethod = button.dataset.method;
+                paymentMethods.forEach(btn => {
+                    btn.classList.remove('selected-payment');
+                    btn.querySelector('[data-lucide="check-circle-2"]').classList.add('hidden');
+                });
+                button.classList.add('selected-payment');
+                button.querySelector('[data-lucide="check-circle-2"]').classList.remove('hidden');
+                confirmButton.disabled = false;
+                if (selectedPaymentMethod === 'paypal') {
+                    confirmButton.classList.add('hidden');
+                    paypalContainer.classList.remove('hidden');
+                } else {
+                    paypalContainer.classList.add('hidden');
+                    confirmButton.classList.remove('hidden');
+                }
+            });
+        });
+
+        
+        confirmButton.addEventListener('click', async () => {
+            if (!selectedPaymentMethod) return;
+
+            // 1. Kiểm tra nhập liệu trước
+            if (!validateForm()) return; 
+
+            // 2. Disable nút để tránh bấm nhiều lần
+            const originalText = confirmButton.innerText;
+            confirmButton.disabled = true;
+            confirmButton.innerText = "Đang xử lý...";
+
+            // 3. Gửi về Backend
+            const success = await guiDonHangVeBackend(selectedPaymentMethod, total);
+
+            if (!success) {
+                confirmButton.disabled = false;
+                confirmButton.innerText = originalText;
+                return;
+            }
+
+            // 4. Xử lý hiển thị sau khi thành công
+            if (selectedPaymentMethod === 'cod') {
+                showThankYouScreen('COD');
+                return;
+            }
+
+            if (selectedPaymentMethod === 'momo' || selectedPaymentMethod === 'zalopay') {
+                const orderId = `TMT${Date.now()}`; 
+                
+                // Hiển thị giao diện QR Code
+                document.getElementById('checkout-content').innerHTML = `
+                    <div class="bg-white p-8 rounded-2xl shadow-lg text-center">
+                        <h1 class="text-3xl font-bold text-pink-600 mb-4">Quét Mã VietQR Để Thanh Toán</h1>
+                        <p class="text-slate-600 mb-6">Vui lòng sử dụng ứng dụng <strong>Ngân hàng</strong>, <strong>MoMo</strong>, hoặc <strong>ZaloPay</strong> để quét mã.</p>
+                        
+                        <img src="images/myqr.jpg" alt="Mã VietQR" class="w-56 h-56 mx-auto border-4 border-pink-200 rounded-lg p-1">
+                        
+                        <div class="text-left bg-rose-50 p-4 rounded-lg my-6 space-y-3 border border-red-200">
+                            <p>
+                                <span class="font-semibold">Số tiền cần chuyển:</span><br>
+                                <span class="text-2xl font-bold text-red-600">${formatCurrency(total)}</span>
+                            </p>
+                            <p>
+                                <span class="font-semibold">Nội dung chuyển khoản (BẮT BUỘC):</span><br>
+                                <span class="text-2xl font-bold text-red-600">${orderId}</span>
+                            </p>
+                            <p class="text-sm text-slate-500 mt-2">
+                                <i>‼️ Vui lòng <strong>sao chép và dán chính xác</strong> nội dung chuyển khoản trên để đơn hàng của bạn được xác nhận nhanh nhất!</i>
+                            </p>
+                        </div>
+
+                        <a href="index.html" class="bg-pink-500 text-white font-bold py-3 px-8 rounded-lg hover:bg-pink-600 transition-colors">
+                            Tôi đã thanh toán & Quay về trang chủ
+                        </a>
+                    </div>
+                `;
+                localStorage.removeItem('shoppingCart');
+            }
+        });
+
+
+        paypal.Buttons({
+            createOrder: async function() {
+                try {
+                    // Gọi API Java
+                    const response = await fetch("/api/create-paypal-order", { 
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ cart: cart }), 
+                    });
+                    const order = await response.json();
+                    return order.id;
+                } catch (err) {
+                    console.error("Lỗi tạo đơn:", err);
+                    alert("Lỗi kết nối PayPal");
+                }
+            },
+            onApprove: async function(data, actions) {
+                try {
+                    // Gọi API Java để capture
+                    const response = await fetch("/api/capture-paypal-order", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ orderID: data.orderID }),
+                    });
+                    const details = await response.json();
+                    if (details.status === 'COMPLETED') {
+                        // Lưu đơn hàng vào database
+                        await guiDonHangVeBackend('PAYPAL', total); 
+                        showThankYouScreen('PayPal', details.id);
+                    }
+                } catch (err) {
+                    console.error("Lỗi capture:", err);
+                    alert("Thanh toán thất bại");
+                }
+            }
+        }).render('#paypal-button-container');
+    });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const checkoutBackgrounds = [
+                'https://images.pexels.com/photos/2253832/pexels-photo-2253832.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+                'https://images.pexels.com/photos/15239/flower-roses-red-roses-bloom.jpg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+                'https://www.toptal.com/designers/subtlepatterns/uploads/fancy-cushion.png'
+            ];
+            const randomBg = checkoutBackgrounds[Math.floor(Math.random() * checkoutBackgrounds.length)];
+            document.body.style.backgroundImage = `url('${randomBg}')`;
+            document.body.style.backgroundSize = 'cover';
+            document.body.style.backgroundAttachment = 'fixed';
+        });
+    </script>
+</body>
+</html>
