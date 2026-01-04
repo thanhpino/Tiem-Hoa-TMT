@@ -32,38 +32,40 @@ Dự án được xây dựng theo kiến trúc **RESTful API**, sử dụng **S
 
 ## 🚀 Key Features
 
-### 🛒 Dành Cho Khách Hàng (Storefront)
-* **Catalog Sản Phẩm:** Duyệt danh sách các loại hoa tươi với hình ảnh trực quan, thông tin ý nghĩa từng loại hoa.
-* **Giỏ Hàng Thông Minh:** Thêm/sửa/xóa sản phẩm, tự động tính tổng tiền.
-* **Thanh Toán Đa Dạng:**
-    * 💵 **COD:** Thanh toán khi nhận hàng.
-    * 💳 **PayPal:** Tích hợp cổng thanh toán quốc tế (Sandbox mode).
-    * 📱 **MoMo/ZaloPay:** Mô phỏng thanh toán qua QR Code.
+### 🤖 1. AI Florist Assistant
+* **Tư vấn ngữ nghĩa:** Bot phân tích ý định khách hàng (Tặng mẹ, sinh nhật, ngân sách 500k...) để gợi ý sản phẩm phù hợp nhất.
+* **Scoring Algorithm:** Thuật toán chấm điểm sản phẩm dựa trên độ khớp của từ khóa và ý nghĩa loài hoa.
+* **Smart Suggestions:** Gợi ý nhanh các mẫu câu hỏi phổ biến.
 
-### 🛡️ Dành Cho Quản Trị Viên (Admin Dashboard)
-* **Real-time Analytics:** Thống kê tổng đơn hàng, doanh thu dự kiến và thời gian cập nhật theo thời gian thực (Auto-refresh mỗi 10s).
-* **Quản Lý Đơn Hàng:** Xem chi tiết đơn hàng, trạng thái xử lý, tìm kiếm đơn hàng theo tên hoặc số điện thoại.
-* **Quản Lý Kho (Demo):** Giao diện thêm/xóa sản phẩm trực quan ngay trên trình duyệt.
-* **🥇 Hệ Thống Loyalty (VIP):** Thuật toán tự động phân hạng khách hàng dựa trên tổng chi tiêu:
-    * 🥉 **Đồng:** < 1.000.000đ
-    * 🥈 **Bạc:** 1.000.000đ - 3.000.000đ
-    * 🥇 **Vàng:** 3.000.000đ - 10.000.000đ
-    * 💎 **Bạch Kim:** > 10.000.000đ
+### 🛒 2. Trải Nghiệm Khách Hàng
+* **Giao diện Glassmorphism:** Thiết kế hiện đại, hiệu ứng kính mờ, tương thích mọi thiết bị.
+* **Thanh Toán Đa Kênh:** Tích hợp thanh toán **PayPal**, **VietQR**, và COD.
+* **Email Automation:** Tự động gửi Email xác nhận đơn hàng chuyên nghiệp ngay sau khi đặt.
+
+### 🛡️ 3. Hệ Thống Quản Trị
+* **Quản Lý Kho Cloud:** Upload ảnh sản phẩm trực tiếp từ máy tính lên **Cloudinary**, không lo mất ảnh khi restart server.
+* **Xử Lý Đơn Hàng:** Cập nhật trạng thái Real-time, **In hóa đơn** trực tiếp trên trình duyệt.
+* **Thống Kê Trực Quan:** Biểu đồ doanh thu, số lượng đơn hàng cập nhật liên tục.
+* **🥇 Hệ Thống Loyalty:** Tự động xếp hạng khách hàng (Đồng, Bạc, Vàng, Bạch Kim) dựa trên tổng chi tiêu.
+
+### ⚙️ 4. DevOps & Hạ Tầng
+* **Containerization:** Đóng gói ứng dụng bằng **Docker**.
+* **CI/CD Pipeline:** Sử dụng **GitHub Actions** để tự động chạy test, build Docker Image và đẩy lên Docker Hub mỗi khi có code mới.
+* **Auto Deploy:** Tích hợp Webhook để tự động Deploy phiên bản mới nhất lên **Render Cloud**.
 
 ---
 
-## 🛠️ Công Nghệ Sử Dụng (Tech Stack)
+## 🛠️ Tech Stack Chi Tiết
 
 | Lĩnh Vực | Công Nghệ |
 | :--- | :--- |
-| **Backend** | Java 21, Spring Boot 3.x, Spring Data JPA, Spring Security |
-| **Database** | MySQL 8.0 (Hosted on Aiven Cloud) |
-| **Frontend** | HTML5, CSS3 (Custom & FontAwesome), JavaScript (ES6+, Fetch API) |
-| **DevOps** | Docker, Docker Compose, Maven |
-| **Deployment** | Render Cloud (Web Service), GitHub Actions (CI/CD) |
-| **Payment** | PayPal REST SDK |
-
----
+| **Backend Core** | Java 21, Spring Boot 3.x, Spring Security |
+| **Database** | MySQL (Local Dev) / PostgreSQL (Production on Render/Aiven) |
+| **ORM** | Spring Data JPA, Hibernate |
+| **Frontend** | HTML5, TailwindCSS, Vanilla JS (No Framework), Lucide Icons |
+| **Cloud Storage** | Cloudinary API (Lưu trữ ảnh) |
+| **Mail Service** | JavaMailSender (SMTP Gmail) |
+| **DevOps** | Docker, Docker Compose, GitHub Actions, Render |
 
 ## 📂 Cấu Trúc Dự Án
 
@@ -84,14 +86,20 @@ TIEM-HOA-TUOI
 ├── compose.yaml     # Cấu hình Docker Compose
 └── pom.xml          # Quản lý thư viện Maven
 
-🗺️ Roadmap Phát Triển (Future Enhancements)
-[ ] Authentication: Tích hợp JWT để bảo mật API và phân quyền User/Admin chuyên sâu.
+## 🗺️ Roadmap & Hướng Phát Triển
 
-[ ] Database Sản Phẩm: Chuyển dữ liệu sản phẩm từ Client-side vào MySQL Database.
+* [x] **Giai đoạn 1:** Hoàn thiện Core E-commerce & Admin.
 
-[ ] Email Marketing: Tự động gửi email hóa đơn khi đặt hàng thành công.
+* [x] **Giai đoạn 2:** Tích hợp AI Chatbot & Cloud Storage.
 
-[ ] AI Chatbot: Tích hợp Chatbot tư vấn chọn hoa theo ý nghĩa.  
+* [x] **Giai đoạn 3:** Thiết lập CI/CD & Deploy Cloud.
+
+* [ ] **Giai đoạn 4 (Next):**
+    * Chuyển đổi sang kiến trúc **Microservices**.
+    * Viết lại Frontend bằng **ReactJS/NextJS**.
+    * Tích hợp Login bằng Google/Facebook (OAuth2).
+
+---
 
 
 👨‍💻 Tác Giả
@@ -99,4 +107,6 @@ Trương Minh Thành * Sinh viên Kỹ Thuật Phần Mềm - Năm 2
 
 Đam mê: Cloud Engineering, DevOps, Java Backend.
 
-GitHub: github.com/thanhpino
+GitHub: [github.com/thanhpino](https://github.com/thanhpino)
+
+Email: tt3145539@gmail.com

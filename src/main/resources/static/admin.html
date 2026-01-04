@@ -334,8 +334,7 @@
         // Hàm định dạng ngày giờ theo múi giờ Việt Nam
         function formatDateVN(dateString) {
             if (!dateString) return '';
-            const dateStr = dateString.endsWith('Z') ? dateString : dateString + 'Z';
-            const date = new Date(dateStr);
+            const date = new Date(dateString);
             
             return date.toLocaleString('vi-VN', {
                 hour: '2-digit', 
@@ -360,7 +359,9 @@
                 
                 let timeVN = formatDateVN(order.orderDate);
 
-                let currentColor = statusColors[order.status] || 'badge-secondary';
+                let safeStatus = order.status || 'MOI_TAO';
+
+                let currentColor = statusColors[safeStatus] || 'badge-secondary';
 
                 html += `
                     <tr>
@@ -382,10 +383,10 @@
                                 class="form-control status-select ${currentColor}" 
                                 onchange="updateStatus(${order.id}, this)"
                             >
-                                <option value="MOI_TAO" ${order.status === 'MOI_TAO' ? 'selected' : ''}>Mới Tạo</option>
-                                <option value="DANG_GIAO" ${order.status === 'DANG_GIAO' ? 'selected' : ''}>Đang Giao</option>
-                                <option value="HOAN_THANH" ${order.status === 'HOAN_THANH' ? 'selected' : ''}>Hoàn Thành</option>
-                                <option value="DA_HUY" ${order.status === 'DA_HUY' ? 'selected' : ''}>Đã Hủy</option>
+                                <option value="MOI_TAO" ${safeStatus === 'MOI_TAO' ? 'selected' : ''}>Mới Tạo</option>
+                                <option value="DANG_GIAO" ${safeStatus === 'DANG_GIAO' ? 'selected' : ''}>Đang Giao</option>
+                                <option value="HOAN_THANH" ${safeStatus === 'HOAN_THANH' ? 'selected' : ''}>Hoàn Thành</option>
+                                <option value="DA_HUY" ${safeStatus === 'DA_HUY' ? 'selected' : ''}>Đã Hủy</option>
                             </select>
                         </td>
                         <td>
@@ -669,7 +670,7 @@
             
             // 4. Ghi nội dung vào cửa sổ đó
             printWindow.document.write(invoiceContent);
-            printWindow.document.close(); // Đóng luồng ghi để trình duyệt biết đã xong
+            printWindow.document.close(); // Đóng luồng ghi dữ liệu
             setTimeout(() => {
                 printWindow.focus();
                 printWindow.print();

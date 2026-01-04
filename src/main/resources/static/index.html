@@ -190,6 +190,8 @@
                 </div>
             </div>
         </div>
+        <div id="chat-suggestions" class="px-4 py-2 bg-gray-50 flex gap-2 overflow-x-auto whitespace-nowrap custom-scrollbar" style="scrollbar-width: none;">
+            </div>
 
         <div class="p-3 bg-white border-t border-gray-100">
             <div class="flex items-center gap-2 bg-gray-100 rounded-full px-4 py-2 border border-transparent focus-within:border-pink-300 focus-within:bg-white transition-all">
@@ -397,129 +399,236 @@
             lucide.createIcons();
         });
 
-        // --- LOGIC CHATBOT AI ---
-        const chatToggleBtn = document.getElementById('chat-toggle-btn');
-        const chatWidget = document.getElementById('chat-widget');
-        const closeChatBtn = document.getElementById('close-chat-btn');
-        const chatInput = document.getElementById('chat-input');
-        const sendBtn = document.getElementById('send-btn');
-        const messagesBox = document.getElementById('chat-messages');
+        // --- LOGIC CHATBOT AI (VERSION PRO - SCORING SYSTEM) ---
+    const chatToggleBtn = document.getElementById('chat-toggle-btn');
+    const chatWidget = document.getElementById('chat-widget');
+    const closeChatBtn = document.getElementById('close-chat-btn');
+    const chatInput = document.getElementById('chat-input');
+    const sendBtn = document.getElementById('send-btn');
+    const messagesBox = document.getElementById('chat-messages');
+    const suggestionsBox = document.getElementById('chat-suggestions');
 
-        const toggleChat = () => {
-            const isHidden = chatWidget.classList.contains('hidden');
-            if (isHidden) {
-                chatWidget.classList.remove('hidden');
-                setTimeout(() => chatWidget.classList.remove('scale-95', 'opacity-0'), 10);
-                chatInput.focus();
-            } else {
-                chatWidget.classList.add('scale-95', 'opacity-0');
-                setTimeout(() => chatWidget.classList.add('hidden'), 300);
-            }
-        };
+    // 1. Dữ liệu Gợi ý (Chips)
+    const suggestionTags = [
+        "🌸 Tặng sinh nhật", "❤️ Tặng người yêu", "💰 Dưới 500k", 
+        "🍀 Hoa may mắn", "🏆 Khai trương", "🚛 Phí ship?"
+    ];
 
-        chatToggleBtn.addEventListener('click', toggleChat);
-        closeChatBtn.addEventListener('click', toggleChat);
+    // 2. Toggle Chat & Render Gợi ý
+    const toggleChat = () => {
+        const isHidden = chatWidget.classList.contains('hidden');
+        if (isHidden) {
+            chatWidget.classList.remove('hidden');
+            setTimeout(() => chatWidget.classList.remove('scale-95', 'opacity-0'), 10);
+            chatInput.focus();
+            renderSuggestions(); // Hiện nút gợi ý khi mở
+        } else {
+            chatWidget.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => chatWidget.classList.add('hidden'), 300);
+        }
+    };
 
-        const addMessage = (text, sender, product = null) => {
-            const div = document.createElement('div');
-            div.className = `flex gap-3 ${sender === 'user' ? 'flex-row-reverse' : ''} items-start`; 
+    chatToggleBtn.addEventListener('click', toggleChat);
+    closeChatBtn.addEventListener('click', toggleChat);
+
+    // 3. Hàm vẽ các nút gợi ý
+    const renderSuggestions = () => {
+        if(suggestionsBox) {
+            suggestionsBox.innerHTML = suggestionTags.map(tag => `
+                <button onclick="handleSuggestionClick('${tag}')" 
+                    class="inline-block px-3 py-1 bg-white border border-pink-200 text-pink-600 text-xs rounded-full hover:bg-pink-500 hover:text-white transition-colors shadow-sm">
+                    ${tag}
+                </button>
+            `).join('');
+        }
+    };
+
+    // Hàm xử lý khi bấm nút gợi ý
+    window.handleSuggestionClick = (text) => {
+        chatInput.value = text;
+        handleUserChat(); // Tự gửi luôn
+    };
+
+    // 4. Hàm hiển thị tin nhắn (Giao diện)
+    const addMessage = (text, sender, product = null) => {
+        const div = document.createElement('div');
+        div.className = `flex gap-3 ${sender === 'user' ? 'flex-row-reverse' : ''} items-start animate-fade-up`;
+        div.style.animationDuration = "0.3s";
+        
+        let avatar = sender === 'bot' 
+            ? `<div class="w-8 h-8 bg-pink-100 rounded-full flex items-center justify-center text-pink-500 flex-shrink-0"><i data-lucide="bot" class="w-5 h-5"></i></div>`
+            : `<div class="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center text-gray-600 flex-shrink-0"><i data-lucide="user" class="w-5 h-5"></i></div>`;
             
-            let avatar = sender === 'bot' 
-                ? `<div class="w-8 h-8 bg-pink-100 rounded-full flex items-center justify-center text-pink-500 flex-shrink-0"><i data-lucide="bot" class="w-5 h-5"></i></div>`
-                : `<div class="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center text-gray-600 flex-shrink-0"><i data-lucide="user" class="w-5 h-5"></i></div>`;
-                
-            let bubbleClass = sender === 'bot' 
-                ? 'bg-white text-gray-700 rounded-tl-none border border-gray-100' 
-                : 'bg-pink-500 text-white rounded-tr-none';
+        let bubbleClass = sender === 'bot' 
+            ? 'bg-white text-gray-700 rounded-tl-none border border-gray-100' 
+            : 'bg-pink-500 text-white rounded-tr-none';
 
-            let contentHtml = `<div class="flex flex-col gap-2 max-w-[75%]">
-                <div class="${bubbleClass} p-3 rounded-2xl shadow-sm text-sm">
-                    <p>${text}</p>
-                </div>`;
+        let contentHtml = `<div class="flex flex-col gap-2 max-w-[85%]">
+            <div class="${bubbleClass} p-3 rounded-2xl shadow-sm text-sm">
+                <p>${text}</p>
+            </div>`;
 
-            if (product) {
-                const price = product.salePrice || product.price;
-                contentHtml += `
-                <div class="bg-white border border-pink-100 rounded-xl overflow-hidden shadow-md group cursor-pointer hover:shadow-lg transition-all w-full" onclick="addToCart(${product.id})">
-                    <div class="h-24 overflow-hidden relative">
-                        <img src="${product.image}" class="w-full h-full object-cover">
-                    </div>
-                    <div class="p-2">
-                        <p class="font-bold text-xs text-gray-800 truncate">${product.name}</p>
+        if (product) {
+            const price = product.salePrice || product.price;
+            contentHtml += `
+            <div class="bg-white border border-pink-100 rounded-xl overflow-hidden shadow-md group cursor-pointer hover:shadow-lg transition-all w-full" onclick="addToCart(${product.id})">
+                <div class="h-24 overflow-hidden relative">
+                    <img src="${product.image}" class="w-full h-full object-cover">
+                </div>
+                <div class="p-2">
+                    <p class="font-bold text-xs text-gray-800 truncate">${product.name}</p>
+                    <p class="text-gray-500 text-[10px] line-clamp-2 mb-1 h-8 overflow-hidden">${product.meaning}</p>
+                    <div class="flex justify-between items-center">
                         <p class="text-pink-600 font-bold text-xs">${formatCurrency(price)}</p>
-                        <button class="w-full mt-2 bg-pink-50 text-pink-600 text-xs py-1 rounded hover:bg-pink-100 font-semibold">Thêm vào giỏ</button>
+                        <span class="bg-pink-50 text-pink-600 text-[10px] px-2 py-1 rounded font-semibold hover:bg-pink-100">Mua ngay</span>
                     </div>
-                </div>`;
-            }
-            
-            contentHtml += `</div>`;
-            div.innerHTML = sender === 'user' ? (contentHtml + avatar) : (avatar + contentHtml);
-            messagesBox.appendChild(div);
-            messagesBox.scrollTop = messagesBox.scrollHeight;
-            lucide.createIcons(); 
-        };
+                </div>
+            </div>`;
+        }
+        
+        contentHtml += `</div>`;
+        div.innerHTML = sender === 'user' ? (contentHtml + avatar) : (avatar + contentHtml);
+        messagesBox.appendChild(div);
+        messagesBox.scrollTop = messagesBox.scrollHeight;
+        lucide.createIcons();
+    };
 
-        const handleUserChat = () => {
-            const text = chatInput.value.trim().toLowerCase();
-            if (!text) return;
-            addMessage(chatInput.value, 'user');
-            chatInput.value = '';
+    // 5. BỘ NÃO AI 🧠
+    const analyzeIntentAndRespond = (inputText) => {
+        const text = inputText.toLowerCase();
+        
+        // A. Câu hỏi thường gặp
+        if (text.includes('chào') || text.includes('hello') || text.includes('hi ')) {
+            return { text: "Chào bạn! TMT Florist đây ạ. Bạn cần tư vấn hoa cho dịp nào? (Sinh nhật, Khai trương, hay tặng Người thương?)" };
+        }
+        if (text.includes('ship') || text.includes('giao hàng') || text.includes('vận chuyển')) {
+            return { text: "Bên mình Freeship nội thành cho đơn từ 500k nhé! Giao hàng siêu tốc trong 2h ạ. 🚀" };
+        }
+        if (text.includes('liên hệ') || text.includes('địa chỉ') || text.includes('sđt')) {
+            return { text: "Hotline: 0932.013.424 📞. Shop ở 670/32 Đoàn Văn Bơ Phường 16 Quận 4 TP.HCM bạn nhé!" };
+        }
+
+        // B. Phân tích Ngân sách
+        const numbers = text.match(/\d+/g);
+        let budget = null;
+        if (numbers) {
+            let rawNum = parseInt(numbers.sort((a,b) => b.length - a.length)[0]); 
+            budget = rawNum < 10000 ? rawNum * 1000 : rawNum; 
+        }
+
+        // C. Thuật toán Quét & Chấm điểm
+        let bestMatch = null;
+        let maxScore = 0;
+
+        hoaTuoi.forEach(p => {
+            let score = 0;
+            // Ghép tên và ý nghĩa để tìm kiếm
+            const content = (p.name + " " + p.meaning).toLowerCase();
+
+            // 1. Chấm điểm theo từ khóa
+            if (text.includes('Hi')) score += 1;
+            if (text.includes('sinh nhật') && (content.includes('hồng') || content.includes('hướng dương') || content.includes('cẩm chướng'))) score += 3;
+            if (text.includes('yêu') && (content.includes('hồng') || content.includes('đỏ') || content.includes('tình yêu'))) score += 5;
+            if (text.includes('mẹ') && (content.includes('ly') || content.includes('cẩm tú') || content.includes('sen') || content.includes('biết ơn'))) score += 5;
+            if (text.includes('khai trương') && (content.includes('hướng dương') || content.includes('đồng tiền') || content.includes('lan'))) score += 5;
+            if (text.includes('buồn') || text.includes('chia buồn')) score += (content.includes('trắng') || content.includes('cúc')) ? 5 : -5;
+            if (text.includes('may mắn')) score += (content.includes('cát tường') || content.includes('đồng tiền') || content.includes('tài lộc')) ? 5 : 0;
+            if (text.includes('tỏ tình') && (content.includes('hồng') || content.includes('tình yêu') || content.includes('đỏ'))) score += 7;
+            if (text.includes('cảm ơn') && (content.includes('cẩm tú cầu') || content.includes('biết ơn'))) score += 5;
+            if (text.includes('giáng sinh') && (content.includes('hồng') || content.includes('tulip') || content.includes('lan'))) score += 4;
+            if (text.includes('valentine') && (content.includes('hồng') || content.includes('đỏ') || content.includes('tình yêu'))) score += 7;
+            if (text.includes('dưới') || text.includes('khoảng') || text.includes('tầm')) score += 2;
+            if (text.includes('trên') || text.includes('hơn')) score -= 2;
+            if (text.includes('best seller') || text.includes('bán chạy')) score += 3;
+            if (text.includes('giá rẻ') || text.includes('bình dân')) score += 2;
+            if (text.includes('sang trọng') && (content.includes('lan') || content.includes('hồ điệp') || content.includes('tulip'))) score += 5;
+            if (text.includes('chào') || text.includes('hello') || text.includes('hi ')) score += 1;
+            if (text.includes('ship') || text.includes('giao hàng') || text.includes('vận chuyển')) score += 1;
+            if (text.includes('liên hệ') || text.includes('địa chỉ') || text.includes('sđt')) score += 1;
+            if (text.includes('tặng mẹ') || text.includes('mẹ yêu')) score += (content.includes('ly') || content.includes('cẩm tú cầu') || content.includes('sen')) ? 5 : 0;
+            if (text.includes('tặng bạn bè') || text.includes('bạn thân')) score += (content.includes('cúc') || content.includes('baby') || content.includes('cẩm chướng')) ? 3 : 0;
+            if (text.includes('tặng sếp') || text.includes('sếp')) score += (content.includes('lan') || content.includes('hồ điệp') || content.includes('tulip')) ? 4 : 0;
+            if (text.includes('tặng đồng nghiệp') || text.includes('đồng nghiệp')) score += (content.includes('cúc') || content.includes('baby') || content.includes('cẩm chướng')) ? 3 : 0;
+            if (text.includes('tặng thầy cô') || text.includes('giáo viên')) score += (content.includes('cẩm tú cầu') || content.includes('cúc')) ? 4 : 0;
+            if (text.includes('tặng con gái') || text.includes('con gái')) score += (content.includes('hồng') || content.includes('ly') || content.includes('baby')) ? 5 : 0;
+            if (text.includes('tặng con trai') || text.includes('con trai')) score += (content.includes('hướng dương') || content.includes('đồng tiền') || content.includes('cát tường')) ? 4 : 0;
+            if (text.includes('tặng bạn gái') || text.includes('bạn gái')) score += (content.includes('hồng') || content.includes('ly') || content.includes('tình yêu')) ? 7 : 0;
+            if (text.includes('tặng bạn trai') || text.includes('bạn trai')) score += (content.includes('hướng dương') || content.includes('đồng tiền') || content.includes('cát tường')) ? 5 : 0;
+            if (text.includes('tặng vợ') || text.includes('vợ yêu')) score += (content.includes('hồng') || content.includes('ly') || content.includes('tình yêu')) ? 8 : 0;
+            if (text.includes('tặng chồng') || text.includes('chồng yêu'))  score += (content.includes('hướng dương') || content.includes('đồng tiền') || content.includes('cát tường')) ? 6 : 0;
+            if (text.includes('tặng sinh nhật mẹ') || text.includes('sinh nhật mẹ')) score += (content.includes('ly') || content.includes('cẩm tú cầu') || content.includes('sen')) ? 7 : 0;
+            if (text.includes('tặng sinh nhật bạn bè') || text.includes('sinh nhật bạn bè')) score += (content.includes('cúc') || content.includes('baby') || content.includes('cẩm chướng')) ? 5 : 0;
+            if (text.includes('tặng sinh nhật sếp') || text.includes('sinh nhật sếp')) score += (content.includes('lan') || content.includes('hồ điệp') || content.includes('tulip')) ? 6 : 0;
+            if (text.includes('tặng sinh nhật thầy cô') || text.includes('sinh nhật thầy cô')) score += (content.includes('cẩm tú cầu') || content.includes('cúc')) ? 6 : 0;
+            if (text.includes('tặng sinh nhật con gái') || text.includes('sinh nhật con gái')) score += (content.includes('hồng') || content.includes('ly') || content.includes('baby')) ? 7 : 0;
+            if (text.includes('tặng sinh nhật con trai') || text.includes('sinh nhật con trai')) score += (content.includes('hướng dương') || content.includes('đồng tiền') || content.includes('cát tường')) ? 6 : 0;
+            if (text.includes('tặng sinh nhật bạn gái') || text.includes('sinh nhật bạn gái')) score += (content.includes('hồng') || content.includes('ly') || content.includes('tình yêu')) ? 9 : 0;
+            if (text.includes('tặng sinh nhật bạn trai') || text.includes('sinh nhật bạn trai')) score += (content.includes('hướng dương') || content.includes('đồng tiền') || content.includes('cát tường')) ? 7 : 0;
+            if (text.includes('tặng sinh nhật vợ') || text.includes('sinh nhật vợ')) score += (content.includes('hồng') || content.includes('ly') || content.includes('tình yêu')) ? 10 : 0;
+            if (text.includes('tặng sinh nhật chồng') || text.includes('sinh nhật chồng'))  score += (content.includes('hướng dương') || content.includes('đồng tiền') || content.includes('cát tường')) ? 8 : 0;
+            if (text.includes('best seller nhiều nhất') || text.includes('bán chạy nhất')) score += 5;
             
+            // 2. Chấm điểm nếu tên hoa trùng khớp trực tiếp
+            if (text.includes(p.name.toLowerCase())) score += 10; 
+
+            // 3. Lọc theo giá
+            if (budget) {
+                const price = p.salePrice || p.price;
+                if (price <= budget) score += 3;
+                else score -= 100; 
+            }
+
+            // Lưu sản phẩm có điểm cao nhất
+            if (score > maxScore) {
+                maxScore = score;
+                bestMatch = p;
+            }
+        });
+
+        // D. Trả kết quả
+        if (bestMatch && maxScore > 0) {
+            const templates = [
+                `Mình tìm thấy bó <strong>${bestMatch.name}</strong> này cực hợp với ý bạn nè!`,
+                `Theo nhu cầu của bạn thì mẫu này là "Best Choice":`,
+                `Mẫu này đang được yêu thích lắm, ý nghĩa lại rất phù hợp:`,
+            ];
+            const randomIntro = templates[Math.floor(Math.random() * templates.length)];
+            return { text: randomIntro, product: bestMatch };
+        }
+
+        // E. Fallback
+        if (budget) {
+            // Tìm sản phẩm rẻ nhất trong tầm giá
+            const cheapProduct = hoaTuoi.find(p => (p.salePrice || p.price) <= budget);
+            if (cheapProduct) return { text: `Với ngân sách ${formatCurrency(budget)} mình có mẫu này xinh lắm:`, product: cheapProduct };
+        }
+
+        return { 
+            text: "Câu này khó quá 😅. Nhưng bạn có muốn xem thử mẫu hoa 'Best Seller' của tiệm không?", 
+            product: hoaTuoi[Math.floor(Math.random() * hoaTuoi.length)] 
+        };
+    };
+        // 6. Xử lý sự kiện gửi tin
+        const handleUserChat = () => {
+            const text = chatInput.value.trim();
+            if (!text) return;
+
+            addMessage(text, 'user');
+            chatInput.value = '';
+            // Hiệu ứng đang nhập...
             const loadingId = 'typing-' + Date.now();
             const loadingHtml = `<div id="${loadingId}" class="flex gap-3"><div class="w-8 h-8 bg-pink-100 rounded-full flex items-center justify-center text-pink-500"><i data-lucide="bot" class="w-5 h-5"></i></div><div class="bg-white p-3 rounded-2xl rounded-tl-none border border-gray-100 text-sm text-gray-400 italic">Đang suy nghĩ...</div></div>`;
             messagesBox.insertAdjacentHTML('beforeend', loadingHtml);
             messagesBox.scrollTop = messagesBox.scrollHeight;
             lucide.createIcons();
 
+            // Trả lời sau 2s
             setTimeout(() => {
                 document.getElementById(loadingId).remove();
-                let responseText = "";
-                let suggestedProduct = null;
-                const numbers = text.match(/\d+/g);
-                let budget = numbers ? parseInt(numbers.join('')) : null;
-                if (budget && budget < 10000) budget = budget * 1000;
-
-                if (text.includes('sinh nhật') || text.includes('bạn gái') || text.includes('yêu')) {
-                    suggestedProduct = hoaTuoi.find(p => p.name.includes('Hồng') && (!budget || (p.salePrice || p.price) <= budget));
-                    responseText = "Sinh nhật hay dịp lãng mạn thì Hoa Hồng là tuyệt nhất rồi! Mình tìm thấy bó này rất hợp ý bạn:";
-                } 
-                else if (text.includes('mẹ') || text.includes('biết ơn') || text.includes('gia đình')) {
-                    suggestedProduct = hoaTuoi.find(p => (p.name.includes('Ly') || p.name.includes('Cẩm Tú')) && (!budget || (p.salePrice || p.price) <= budget));
-                    responseText = "Tặng Mẹ thì cần sự trang trọng và ấm áp. Bạn xem thử mẫu này nhé:";
-                }
-                else if (text.includes('khai trương') || text.includes('tốt nghiệp') || text.includes('bạn')) {
-                    suggestedProduct = hoaTuoi.find(p => p.name.includes('Hướng Dương') && (!budget || (p.salePrice || p.price) <= budget));
-                    responseText = "Chúc mừng thì Hướng Dương là số 1! Mang lại năng lượng tích cực lắm luôn:";
-                }
-                else if (text.includes('buồn') || text.includes('xin lỗi')) {
-                    suggestedProduct = hoaTuoi.find(p => p.name.includes('Baby') || p.name.includes('Cúc'));
-                    responseText = "Một chút nhẹ nhàng để xoa dịu tâm hồn. Mẫu này rất tinh tế:";
-                }
-                else if (text.includes('sang trọng') || text.includes('đối tác') || text.includes('quan trọng')) {
-                // Ưu tiên Lan Hồ Điệp
-                    suggestedProduct = hoaTuoi.find(p => p.name.includes('Lan Hồ Điệp') && (!budget || (p.salePrice || p.price) <= budget));
-                    responseText = "Đối tác quan trọng thì phải chọn Lan Hồ Điệp mới xứng tầm nhé:";
-                }
-                else if (text.includes('tình yêu') || text.includes('lãng mạn')) {
-                    suggestedProduct = hoaTuoi.find(p => p.name.includes('Hồng') && (!budget || (p.salePrice || p.price) <= budget));
-                    responseText = "Tình yêu thì không thể thiếu Hoa Hồng được rồi! Mình gợi ý bó này cho bạn:";
-                }
-                else if (text.includes('may mắn') || text.includes('an lành')) {
-                    suggestedProduct = hoaTuoi.find(p => p.name.includes('Cát Tường') && (!budget || (p.salePrice || p.price) <= budget));
-                    responseText = "Chúc bạn may mắn với bó Cát Tường này nhé:";
-                }   
-                if (!suggestedProduct && budget) {
-                    suggestedProduct = hoaTuoi.find(p => (p.salePrice || p.price) <= budget);
-                    responseText = `Với ngân sách khoảng ${formatCurrency(budget)}, mình thấy bó này "ngon-bổ-rẻ" nhất nè:`;
-                }
-                if (!suggestedProduct) {
-                    suggestedProduct = hoaTuoi[Math.floor(Math.random() * 3)]; 
-                    responseText = "Câu này hơi khó với mình 😅. Nhưng nếu bạn đang tìm bó hoa 'best seller' tại tiệm thì xem thử em này nha:";
-                }
-                addMessage(responseText, 'bot', suggestedProduct);
-            }, 1500);
+                const response = analyzeIntentAndRespond(text);
+                addMessage(response.text, 'bot', response.product);
+            }, 2000);
         };
-
         chatInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') handleUserChat(); });
         sendBtn.addEventListener('click', handleUserChat);
     </script>

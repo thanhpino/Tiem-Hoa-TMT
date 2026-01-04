@@ -21,7 +21,8 @@ public class CloudinaryService {
     public String uploadImage(MultipartFile file) {
         try {
             // Upload file lên Cloudinary
-            Map uploadResult = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap());
+            @SuppressWarnings("unchecked")
+            Map<String, Object> uploadResult = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap());
             
             // Trả về đường link ảnh online
             return uploadResult.get("url").toString();
