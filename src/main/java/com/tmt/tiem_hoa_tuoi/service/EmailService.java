@@ -5,13 +5,15 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import com.tmt.tiem_hoa_tuoi.entity.FlowerOrder;
+import org.springframework.scheduling.annotation.Async;
 
 @Service
 public class EmailService {
 
     @Autowired
     private JavaMailSender mailSender;
-
+    @Async
+    
     public void sendOrderConfirmation(String toEmail, FlowerOrder order) {
         try {
             SimpleMailMessage message = new SimpleMailMessage();
