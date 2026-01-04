@@ -22,9 +22,17 @@ jobs:
         distribution: 'temurin'
         cache: maven
 
-    # 3. Chạy Unit Test với Maven
-    - name: Run Unit Tests
-      run: mvn test
+    # 3. Build & Test với Maven
+    - name: Build with Maven
+      env:
+        DB_URL: ${{ secrets.DB_URL }}
+        DB_USER: ${{ secrets.DB_USER }}
+        DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+        PAYPAL_CLIENT_ID: ${{ secrets.PAYPAL_CLIENT_ID }}
+        PAYPAL_CLIENT_SECRET: ${{ secrets.PAYPAL_CLIENT_SECRET }}
+        MAIL_USERNAME: ${{ secrets.MAIL_USERNAME }}
+        MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
+      run: mvn clean package
 
     # 4. Đăng nhập vào Docker Hub
     - name: Login to Docker Hub
@@ -39,8 +47,9 @@ jobs:
       with:
         context: .
         push: true
-        # Sửa 'tên_user_của_bro' thành tên thật trên Docker Hub nhé
+        # Tên Image trên Docker Hub
         tags: pinovn/tiem-hoa-tuoi-backend:latest
-    # 6. Báo cho Render
+
+    # 6. Báo cho Render biết để kéo Image mới về
     - name: Trigger Render Deploy
       run: curl "${{ secrets.RENDER_DEPLOY }}"
