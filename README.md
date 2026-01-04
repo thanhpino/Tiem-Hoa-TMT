@@ -15,7 +15,13 @@ Dự án được xây dựng theo kiến trúc **RESTful API**, sử dụng **S
 > **Customer Main Page :** [https://tiem-hoa-tmt.onrender.com](/src/main/resources/static/images/H1.png)
 
 
+> **Customer Main Page With ChatBot :** [ChatBot](/src/main/resources/static/images/H6.png)
+
+
 > **Customer Main Payment :** [https://tiem-hoa-tmt.onrender.com/thanhtoan.html](/src/main/resources/static/images/H2.png)
+
+
+> **Customer Payment Methods :** [COD-MOMO-ZALOPAY-PAYPAL OR DEBIT, CREDIT CARD](/src/main/resources/static/images/H7.png)
 
 
 > **Security Admin Web:** [Username and Password required](/src/main/resources/static/images/H3.png)  
