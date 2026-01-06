@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản Lý Tiệm Hoa TMT</title>
+    <link rel="icon" href="images/admin.png" type="image/png">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body>
+
+    <div class="sidebar">
+        <div class="logo"><i class="fa-solid fa-seedling"></i> Tiệm Hoa TMT</div>
+        
+        <div class="menu-item active" onclick="switchTab('dashboard', this)">
+            <i class="fa-solid fa-chart-pie"></i> Tổng Quan
+        </div>
+        <div class="menu-item" onclick="switchTab('products', this)">
+            <i class="fa-solid fa-seedling"></i> Sản Phẩm
+        </div>
+        <div class="menu-item" onclick="switchTab('customers', this)">
+            <i class="fa-solid fa-users"></i> Khách Hàng VIP
+        </div>
+        
+        <div style="margin-top: auto;">
+            <a th:href="@{/index}" class="menu-item">
+                <i class="fa-solid fa-arrow-right-from-bracket"></i> Về Trang Chủ
+            </a>
+        </div>
+    </div>
+
+    <div class="main-content">
+        
+        <div id="dashboard" class="tab-section active">
+            <div class="stats-grid">
+                <div class="card">
+                    <div class="card-icon bg-pink"><i class="fa-solid fa-bag-shopping"></i></div>
+                    <div><h3 id="totalOrders">0</h3><p>Tổng Đơn Hàng</p></div>
+                </div>
+                <div class="card">
+                    <div class="card-icon bg-green"><i class="fa-solid fa-money-bill-wave"></i></div>
+                    <div><h3 id="totalRevenue">0 đ</h3><p>Doanh Thu</p></div>
+                </div>
+                <div class="card">
+                    <div class="card-icon bg-blue"><i class="fa-solid fa-clock"></i></div>
+                    <div><h3 id="lastUpdated">--:--</h3><p>Cập nhật lúc</p></div>
+                </div>
+            </div>
+
+            <div class="table-wrapper">
+                <div class="table-header">
+                    <h3>📦 Danh Sách Đơn Hàng</h3>
+                    <div class="search-box">
+                        <input type="text" id="searchInput" placeholder="🔍 Tìm tên khách, SĐT..." onkeyup="filterOrders()">
+                    </div>
+                </div>
+                <table>
+                    <thead>
+                        <tr><th>Mã</th><th>Khách Hàng</th><th>Chi Tiết</th><th>Tổng Tiền</th><th>Ngày Đặt</th><th>Trạng Thái</th></tr>
+                    </thead>
+                    <tbody id="orderTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="products" class="tab-section">
+            <div class="table-wrapper">
+                <div class="table-header">
+                    <h3>🌻 Quản Lý Sản Phẩm</h3>
+                    <button class="btn btn-primary" onclick="openModal()">+ Thêm Hoa Mới</button>
+                </div>
+                <table>
+                    <thead>
+                        <tr><th>Ảnh</th><th>Tên Hoa</th><th>Giá Gốc</th><th>Giá Bán</th><th>Hành Động</th></tr>
+                    </thead>
+                    <tbody id="productTableBody">
+                        </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="customers" class="tab-section">
+            <div class="table-wrapper">
+                <div class="table-header">
+                    <h3>💎 Bảng Xếp Hạng Khách Hàng Thân Thiết</h3>
+                    <p style="font-size:13px; color:gray">
+                        <span class="rank-badge rank-bronze">Đồng < 1Tr</span>
+                        <span class="rank-badge rank-silver">Bạc 1-3Tr</span>
+                        <span class="rank-badge rank-gold">Vàng 3-10Tr</span>
+                        <span class="rank-badge rank-diamond">Bạch Kim > 10Tr</span>
+                    </p>
+                </div>
+                <table>
+                    <thead><tr><th>Hạng</th><th>Tên Khách Hàng</th><th>SĐT</th><th>Số Đơn</th><th>Tổng Chi Tiêu</th></tr></thead>
+                    <tbody id="customerTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    <div id="productModal" class="modal">
+        <div class="modal-content">
+            <h3 style="margin-bottom:20px; color:var(--primary-color)">Thêm Hoa Mới</h3>
+            <div class="form-group"><label>Tên Hoa</label><input type="text" id="newProdName"></div>
+            <div class="form-group"><label>Giá (VNĐ)</label><input type="number" id="newProdPrice"></div>
+            <div class="form-group">
+                <label>Hình Ảnh</label>
+                <input type="file" id="newProdImgFile" accept="image/*"> <p id="uploadStatus" style="font-size:12px; color:gray; margin-top:5px"></p>
+            </div>
+            <div style="text-align:right; margin-top:20px;">
+                <button class="btn" style="background:#f1f5f9; margin-right:10px; color:#333" onclick="closeModal()">Hủy</button>
+                <button class="btn btn-primary" onclick="addProduct()">Lưu Sản Phẩm</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast-container"></div>
+
+    <audio id="notification-sound" src="/asset/voicethongbaodon.mp3" preload="auto"></audio>
+
+    <script src="/js/admin.js"></script>
+</body>
+</html>

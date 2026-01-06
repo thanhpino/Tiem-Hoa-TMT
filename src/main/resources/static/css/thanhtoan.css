@@ -1,0 +1,4 @@
+body { font-family: 'Quicksand', sans-serif; }
+h1, h2, h3 { font-family: 'Playfair Display', serif; }
+button:disabled { background-color: #9ca3af; cursor: not-allowed; }
+.selected-payment { border-color: #ec4899; background-color: #fdf2f8; }

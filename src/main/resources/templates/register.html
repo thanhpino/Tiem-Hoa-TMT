@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Đăng Ký - Tiệm Hoa TMT</title>
+    <link rel="icon" href="images/register.png" type="image/png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+            font-family: 'Segoe UI', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            width: 400px;
+        }
+        h2 { text-align: center; color: #ff6b6b; margin-bottom: 30px; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 5px; color: #666; }
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box; 
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        button:hover { background: #ff5252; }
+        .error { color: red; font-size: 14px; text-align: center; margin-bottom: 15px; }
+        .link { text-align: center; margin-top: 20px; font-size: 14px; }
+        .link a { color: #ff6b6b; text-decoration: none; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>🌸 Đăng Ký Thành Viên</h2>
+
+    <div th:if="${error}" class="error">
+        <p th:text="${error}"></p>
+    </div>
+
+    <form th:action="@{/register}" th:object="${user}" method="post">
+        <div class="form-group">
+            <label>Tên đăng nhập (*)</label>
+            <input type="text" th:field="*{username}" required placeholder="Ví dụ: thanhdz">
+        </div>
+        
+        <div class="form-group">
+            <label>Mật khẩu (*)</label>
+            <input type="password" th:field="*{password}" required placeholder="Nhập mật khẩu...">
+        </div>
+
+        <div class="form-group">
+            <label>Email (*)</label>
+            <input type="email" th:field="*{email}" required placeholder="email@example.com">
+        </div>
+
+        <div class="form-group">
+            <label>Họ và Tên</label>
+            <input type="text" th:field="*{fullName}" placeholder="Nguyễn Văn A">
+        </div>
+
+        <div class="form-group">
+            <label>Số điện thoại</label>
+            <input type="text" th:field="*{phoneNumber}" placeholder="09xxxxxxx">
+        </div>
+
+        <button type="submit">Đăng Ký Ngay</button>
+    </form>
+
+    <div class="link">
+        Đã có tài khoản? <a href="/login">Đăng nhập tại đây</a>
+    </div>
+</div>
+
+</body>
+</html>

@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor; // Thêm dòng này
 import lombok.NoArgsConstructor;
 import lombok.Data;
 import java.time.LocalDateTime;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Data
@@ -33,4 +34,9 @@ public class FlowerOrder {
     private String status;       // Trạng thái đơn
 
     private LocalDateTime orderDate; // Ngày đặt
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    @JsonIgnore // Tạo cột khóa ngoại user_id trong bảng Flower_Orders
+    private User user;
 }

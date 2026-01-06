@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Đăng Nhập - Tiệm Hoa TMT</title>
+    <link rel="icon" href="images/login.png" type="image/png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            background: linear-gradient(135deg, #fff1eb 0%, #ace0f9 100%); 
+            font-family: 'Segoe UI', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            width: 350px;
+        }
+        h2 { text-align: center; color: #0093E9; margin-bottom: 30px; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 5px; color: #666; }
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #0093E9;
+            background-image: linear-gradient(160deg, #0093E9 0%, #80D0C7 100%);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        button:hover { opacity: 0.9; }
+        .alert { padding: 10px; border-radius: 5px; margin-bottom: 15px; text-align: center; font-size: 14px;}
+        .alert-error { background: #ffebee; color: #c62828; }
+        .alert-success { background: #e8f5e9; color: #2e7d32; }
+        .link { text-align: center; margin-top: 20px; font-size: 14px; }
+        .link a { color: #0093E9; text-decoration: none; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>🔐 Đăng Nhập</h2>
+
+    <div th:if="${param.error}" class="alert alert-error">
+        Sai tên đăng nhập hoặc mật khẩu!
+    </div>
+
+    <div th:if="${param.success}" class="alert alert-success">
+        Đăng ký thành công! Vui lòng đăng nhập.
+    </div>
+
+    <div th:if="${param.logout}" class="alert alert-success">
+        Bạn đã đăng xuất thành công.
+    </div>
+
+    <form th:action="@{/perform_login}" method="post">
+        <div class="form-group">
+            <label>Tên đăng nhập</label>
+            <input type="text" name="username" required>
+        </div>
+        
+        <div class="form-group">
+            <label>Mật khẩu</label>
+            <input type="password" name="password" required>
+        </div>
+
+        <button type="submit">Đăng Nhập</button>
+    </form>
+
+    <div class="link">
+        Chưa có tài khoản? <a href="/register">Đăng ký mới</a>
+        <br><br>
+        <a href="/" style="color: #666; font-size: 12px;">← Quay về trang chủ</a>
+    </div>
+</div>
+
+</body>
+</html>

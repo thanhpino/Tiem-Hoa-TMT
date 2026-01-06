@@ -12,27 +12,34 @@
 
 Dự án được xây dựng theo kiến trúc **RESTful API**, sử dụng **Spring Boot** làm lõi, deployed trên nền tảng Cloud sử dụng **Docker Container**.
 
-> **Customer Main Page :** [https://tiem-hoa-tmt.onrender.com](/src/main/resources/static/images/H1.png)
+---
 
+## 📸 Demo Sản Phẩm
 
-> **Customer Main Page With ChatBot :** [ChatBot](/src/main/resources/static/images/H6.png)
+### 1. Giao Diện Khách Hàng (Customer)
 
+**Trang chủ (Main Page):**
+![Customer Main Page](src/main/resources/static/images/H1.png)
 
-> **Customer Main Payment :** [https://tiem-hoa-tmt.onrender.com/thanhtoan.html](/src/main/resources/static/images/H2.png)
+**Chatbot AI Tư Vấn:**
+![Customer Main Page With ChatBot](src/main/resources/static/images/H6.png)
 
+**Trang Thanh Toán (Checkout):**
+![Customer Main Payment](src/main/resources/static/images/H2.png)
 
-> **Customer Payment Methods :** [COD-MOMO-ZALOPAY-PAYPAL OR DEBIT, CREDIT CARD](/src/main/resources/static/images/H7.png)
+**Đa Dạng Phương Thức Thanh Toán:**
+![Payment Methods](src/main/resources/static/images/H7.png)
 
+### 2. Giao Diện Quản Trị (Admin)
 
-> **Security Admin Web:** [Username and Password required](/src/main/resources/static/images/H3.png)  
+**Đăng Nhập Bảo Mật:**
+![Security Admin Web](src/main/resources/static/images/H3.png)
 
+**Dashboard Thống Kê:**
+![Admin Dashboard](src/main/resources/static/images/H4.png)
 
-> **Admin Dashboard:** [https://tiem-hoa-tmt.onrender.com/admin.html](/src/main/resources/static/images/H4.png)
-
-
-> **Add and delete product** [Add and delete here](/src/main/resources/static/images/H5.png)
-
-
+**Quản Lý Sản Phẩm:**
+![Add and delete product](src/main/resources/static/images/H5.png)
 
 ---
 
@@ -73,8 +80,11 @@ Dự án được xây dựng theo kiến trúc **RESTful API**, sử dụng **S
 | **Mail Service** | JavaMailSender (SMTP Gmail) |
 | **DevOps** | Docker, Docker Compose, GitHub Actions, Render |
 
+---
+
 ## 📂 Cấu Trúc Dự Án
 
+```plaintext
 TIEM-HOA-TUOI
 ├── src/main/java/com/tmt/tiem_hoa_tuoi
 │   ├── config       # Cấu hình bảo mật (SecurityConfig), CORS
@@ -91,28 +101,3 @@ TIEM-HOA-TUOI
 ├── Dockerfile       # Cấu hình đóng gói Container
 ├── compose.yaml     # Cấu hình Docker Compose
 └── pom.xml          # Quản lý thư viện Maven
-
-## 🗺️ Roadmap & Hướng Phát Triển
-
-* [x] **Giai đoạn 1:** Hoàn thiện Core E-commerce & Admin.
-
-* [x] **Giai đoạn 2:** Tích hợp AI Chatbot & Cloud Storage.
-
-* [x] **Giai đoạn 3:** Thiết lập CI/CD & Deploy Cloud.
-
-* [ ] **Giai đoạn 4 (Next):**
-    * Chuyển đổi sang kiến trúc **Microservices**.
-    * Viết lại Frontend bằng **ReactJS/NextJS**.
-    * Tích hợp Login bằng Google/Facebook (OAuth2).
-
----
-
-
-👨‍💻 Tác Giả
-Trương Minh Thành * Sinh viên Kỹ Thuật Phần Mềm - Năm 2
-
-Đam mê: Cloud Engineering, DevOps, Java Backend.
-
-GitHub: [github.com/thanhpino](https://github.com/thanhpino)
-
-Email: tt3145539@gmail.com

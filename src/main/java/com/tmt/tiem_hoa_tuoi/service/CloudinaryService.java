@@ -11,7 +11,7 @@ import java.util.Map;
 @Service
 public class CloudinaryService {
 
-    // Thay 3 thông số này bằng của bro vừa lấy ở Bước 1
+    // Cấu hình Cloudinary
     private final Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(
         "cloud_name", "djaz70prr",
         "api_key", "226862455392144",

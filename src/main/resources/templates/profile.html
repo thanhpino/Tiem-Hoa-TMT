@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Lịch Sử Đơn Hàng - TMT Florist</title>
+    <link rel="icon" href="images/profile.png" type="image/png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="/css/index.css"> 
+    
+    <style>body { font-family: 'Quicksand', sans-serif; }</style>
+</head>
+<body class="bg-slate-50">
+
+    <div class="container mx-auto px-4 py-10 max-w-4xl">
+        <div class="flex justify-between items-center mb-8">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-800">Xin chào, <span th:text="${user.fullName}">Bạn</span>! 👋</h1>
+                <p class="text-gray-500">Đây là danh sách các đơn hàng bạn đã đặt.</p>
+            </div>
+            <a th:href="@{/index}" class="bg-white border border-gray-200 text-gray-600 px-4 py-2 rounded-xl hover:bg-gray-50 flex items-center gap-2 transition-colors">
+                <i data-lucide="arrow-left" class="w-4 h-4"></i> Quay về mua sắm
+            </a>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+            
+            <div th:if="${orders.empty}" class="p-10 text-center">
+                <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4 text-gray-400">
+                    <i data-lucide="shopping-bag" class="w-8 h-8"></i>
+                </div>
+                <h3 class="text-lg font-bold text-gray-600">Bạn chưa có đơn hàng nào</h3>
+                <p class="text-gray-400 mb-6">Hãy dạo một vòng cửa hàng để chọn hoa nhé!</p>
+                <a href="/" class="bg-pink-500 text-white px-6 py-2 rounded-full hover:bg-pink-600">Mua ngay</a>
+            </div>
+
+            <div th:unless="${orders.empty}">
+                <table class="w-full text-left">
+                    <thead class="bg-gray-50 border-b border-gray-100 text-gray-500 text-sm uppercase">
+                        <tr>
+                            <th class="p-4 font-semibold">Mã đơn</th>
+                            <th class="p-4 font-semibold">Ngày đặt</th>
+                            <th class="p-4 font-semibold">Tổng tiền</th>
+                            <th class="p-4 font-semibold">Trạng thái</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100">
+                        <tr th:each="order : ${orders}" class="hover:bg-gray-50/50 transition-colors">
+                            <td class="p-4 font-bold text-gray-700">#<span th:text="${order.id}"></span></td>
+                            <td class="p-4 text-gray-600" th:text="${#temporals.format(order.orderDate, 'dd/MM/yyyy HH:mm')}"></td>
+                            <td class="p-4 font-bold text-pink-600" th:text="${#numbers.formatDecimal(order.totalAmount, 0, 'COMMA', 0, 'POINT') + ' đ'}"></td>
+                            <td class="p-4">
+                                <span th:if="${order.status == 'MOI_TAO'}" class="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-xs font-bold flex items-center w-fit gap-1">
+                                    <i data-lucide="clock" class="w-3 h-3"></i> Chờ xử lý
+                                </span>
+
+                                <span th:if="${order.status == 'DA_THANH_TOAN'}" class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-xs font-bold flex items-center w-fit gap-1">
+                                    <i data-lucide="credit-card" class="w-3 h-3"></i> Đã thanh toán
+                                </span>
+
+                                <span th:if="${order.status == 'DANG_GIAO'}" class="bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-xs font-bold flex items-center w-fit gap-1">
+                                    <i data-lucide="truck" class="w-3 h-3"></i> Đang giao
+                                </span>
+
+                                <span th:if="${order.status == 'HOAN_THANH'}" class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-bold flex items-center w-fit gap-1">
+                                    <i data-lucide="check-circle" class="w-3 h-3"></i> Hoàn thành
+                                </span>
+
+                                <span th:if="${order.status == 'DA_HUY'}" class="bg-red-100 text-red-700 px-3 py-1 rounded-full text-xs font-bold flex items-center w-fit gap-1">
+                                    <i data-lucide="x-circle" class="w-3 h-3"></i> Đã hủy
+                                </span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <button id="chat-toggle-btn" class="fixed bottom-24 right-5 bg-white text-pink-600 p-4 rounded-full shadow-xl z-40 border-2 border-pink-100 hover:bg-pink-50 transition-all hover:scale-110 group">
+        <span class="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full animate-bounce">1</span>
+        <i data-lucide="message-square-heart" class="w-6 h-6"></i>
+        <span class="absolute right-full mr-3 top-1/2 -translate-y-1/2 bg-gray-800 text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+            Chat với AI Florist
+        </span>
+    </button>
+
+    <div id="chat-widget" class="fixed bottom-5 right-5 w-full max-w-[350px] bg-white rounded-2xl shadow-2xl z-50 hidden border border-pink-100 flex flex-col overflow-hidden transition-all duration-300 transform scale-95 opacity-0 origin-bottom-right" style="height: 500px; max-height: 80vh;">
+        <div class="bg-gradient-to-r from-pink-500 to-rose-400 p-4 text-white flex justify-between items-center shadow-md">
+            <div class="flex items-center gap-3">
+                <div class="relative">
+                    <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-pink-500">
+                        <i data-lucide="bot" class="w-6 h-6"></i>
+                    </div>
+                    <div class="absolute bottom-0 right-0 w-3 h-3 bg-green-400 border-2 border-white rounded-full"></div>
+                </div>
+                <div>
+                    <h3 class="font-bold text-sm">TMT AI Florist 🤖</h3>
+                    <p class="text-xs text-pink-100">Luôn sẵn sàng tư vấn!</p>
+                </div>
+            </div>
+            <button id="close-chat-btn" class="text-white/80 hover:text-white hover:bg-white/20 p-1 rounded-full transition-colors">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+        </div>
+
+        <div id="chat-messages" class="flex-1 p-4 overflow-y-auto bg-gray-50 space-y-4">
+            <div class="flex gap-3 items-start">
+                <div class="w-8 h-8 bg-pink-100 rounded-full flex items-center justify-center text-pink-500 flex-shrink-0">
+                    <i data-lucide="bot" class="w-5 h-5"></i>
+                </div>
+                <div class="bg-white p-3 rounded-2xl rounded-tl-none shadow-sm border border-gray-100 text-sm text-gray-700">
+                    Chào bạn! Mình là trợ lý AI của Tiệm Hoa TMT. 🌸<br>
+                    Bạn cần hỗ trợ gì về đơn hàng không ạ?
+                </div>
+            </div>
+        </div>
+        <div id="chat-suggestions" class="px-4 py-2 bg-gray-50 flex gap-2 overflow-x-auto whitespace-nowrap custom-scrollbar" style="scrollbar-width: none;">
+        </div>
+
+        <div class="p-3 bg-white border-t border-gray-100">
+            <div class="flex items-center gap-2 bg-gray-100 rounded-full px-4 py-2 border border-transparent focus-within:border-pink-300 focus-within:bg-white transition-all">
+                <input type="text" id="chat-input" placeholder="Nhập tin nhắn..." class="flex-1 bg-transparent outline-none text-sm text-gray-700" autocomplete="off">
+                <button id="send-btn" class="text-pink-500 hover:text-pink-600 p-1 transition-transform active:scale-90">
+                    <i data-lucide="send" class="w-5 h-5"></i>
+                </button>
+            </div>
+            <div class="text-center mt-1">
+                <span class="text-[10px] text-gray-400">Powered by TMT AI Engine</span>
+            </div>
+        </div>
+    </div>
+    <button id="contact-button" class="fixed bottom-5 right-5 bg-green-500 text-white font-bold p-4 rounded-full shadow-lg z-40 hover:bg-green-600 transition-transform hover:scale-110">
+        <i data-lucide="phone" class="w-6 h-6"></i>
+    </button>
+    <div id="contact-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 hidden z-50 transition-opacity duration-300">
+        <div class="bg-white rounded-3xl shadow-2xl p-8 w-full max-w-sm text-center transform transition-all scale-100">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-gray-800 font-serif">Liên Hệ TMT</h2>
+                <button onclick="closeContactModal()" class="text-gray-400 hover:text-gray-600 bg-gray-100 p-2 rounded-full"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            <p class="text-gray-500 mb-8">TMT luôn sẵn sàng lắng nghe bạn!</p>
+            <div class="space-y-4">
+                <a href="tel:0932013424" class="flex items-center justify-center w-full bg-pink-500 text-white font-bold py-3 px-4 rounded-xl hover:bg-pink-600 transition-colors shadow-md hover:-translate-y-1">
+                    <i data-lucide="phone" class="w-5 h-5 mr-3"></i> 0932 013 424
+                </a>
+                <a href="https://zalo.me/0379602647" target="_blank" class="flex items-center justify-center w-full bg-blue-500 text-white font-bold py-3 px-4 rounded-xl hover:bg-blue-600 transition-colors shadow-md hover:-translate-y-1">
+                    <i data-lucide="message-circle" class="w-5 h-5 mr-3"></i> Chat Zalo
+                </a>
+                <a href="https://www.facebook.com/tuyen.tu.12979431" target="_blank" class="flex items-center justify-center w-full bg-indigo-600 text-white font-bold py-3 px-4 rounded-xl hover:bg-indigo-700 transition-colors shadow-md hover:-translate-y-1">
+                    <i data-lucide="facebook" class="w-5 h-5 mr-3"></i> Facebook
+                </a>
+            </div>
+        </div>
+    </div>
+    <script>lucide.createIcons();</script>
+    
+    <script src="/js/chatbot.js"></script>
+    <script src="/js/contact.js"></script>
+</body>
+</html>
