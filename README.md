@@ -8,7 +8,7 @@
 
 ## 📖 Giới Thiệu
 
-**Tiệm Hoa TMT** là một dự án Full-stack Web Application chuyên cung cấp giải pháp đặt mua hoa tươi trực tuyến. Dự án tập trung vào trải nghiệm người dùng mượt mà, tích hợp thanh toán điện tử hiện đại và hệ thống quản trị (Admin Dashboard) thông minh với khả năng phân tích dữ liệu khách hàng.
+**Tiệm Hoa TMT** là một dự án Full-stack Web Application chuyên cung cấp giải pháp đặt mua hoa tươi trực tuyến. Dự án tập trung vào trải nghiệm người dùng mượt mà, tích hợp thanh toán điện tử hiện đại và hệ thống quản trị (Admin Dashboard), chatbot gợi ý hoa và gửi email về khách hàng để xác nhận.
 
 Dự án được xây dựng theo kiến trúc **RESTful API**, sử dụng **Spring Boot** làm lõi, deployed trên nền tảng Cloud sử dụng **Docker Container**.
 
@@ -73,11 +73,11 @@ Dự án được xây dựng theo kiến trúc **RESTful API**, sử dụng **S
 | Lĩnh Vực | Công Nghệ |
 | :--- | :--- |
 | **Backend Core** | Java 21, Spring Boot 3.x, Spring Security |
-| **Database** | MySQL (Local Dev) / PostgreSQL (Production on Render/Aiven) |
+| **Database** | MySQL  / PostgreSQL  |
 | **ORM** | Spring Data JPA, Hibernate |
-| **Frontend** | HTML5, TailwindCSS, Vanilla JS (No Framework), Lucide Icons |
-| **Cloud Storage** | Cloudinary API (Lưu trữ ảnh) |
-| **Mail Service** | JavaMailSender (SMTP Gmail) |
+| **Frontend** | HTML5, TailwindCSS, Vanilla JS , Lucide Icons |
+| **Cloud Storage** | Cloudinary API  |
+| **Mail Service** | JavaMailSender  |
 | **DevOps** | Docker, Docker Compose, GitHub Actions, Render |
 
 ---
