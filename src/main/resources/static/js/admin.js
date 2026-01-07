@@ -276,7 +276,7 @@ async function addProduct() {
 
     // 1. Kiểm tra xem có file ảnh không
     if (fileInput.files.length > 0) {
-        statusText.innerText = "Đang upload ảnh lên Cloud... Vui lòng đợi...";
+        statusText.innerText = "Đang upload ảnh lên... Vui lòng đợi...";
         let file = fileInput.files[0];
         let formData = new FormData();
         formData.append("file", file);
@@ -358,7 +358,7 @@ function updateStatus(orderId, selectElement) {
 
         } else {
             showNotification("Lỗi: Không thể cập nhật trạng thái!");
-            // Nếu lỗi, reset lại giá trị cũ
+            // Nếu lỗi, reset về giá trị cũ
         }
     })
     .catch(error => {
@@ -366,7 +366,7 @@ function updateStatus(orderId, selectElement) {
         showNotification("Lỗi kết nối server!");
     })
     .finally(() => {
-        selectElement.disabled = false; // Mở lại cho chọn tiếp
+        selectElement.disabled = false; // Mở lại
     });
 }
 
@@ -382,7 +382,7 @@ function filterOrders() {
 
 function printOrder(orderId) {
     // 1. Tìm thông tin đơn hàng trong mảng allOrders
-    // Lưu ý: orderId từ nút bấm là số, nên so sánh == hoặc ép kiểu
+    // Lưu ý: orderId từ nút bấm là số, nên so sánh bằng hoặc ép kiểu
     const order = allOrders.find(o => o.id == orderId);
     
     if (!order) {
