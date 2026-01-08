@@ -1,11 +1,12 @@
 package com.tmt.tiem_hoa_tuoi.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor; // Thêm dòng này
+import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.Data;
 import java.time.LocalDateTime;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.List;
 
 @Entity
 @Data
@@ -34,9 +35,19 @@ public class FlowerOrder {
     private String status;       // Trạng thái đơn
 
     private LocalDateTime orderDate; // Ngày đặt
+    @Column(name = "review_rating")
+    private Integer rating;  // Đánh giá 
+
+    @Column(name = "review_comment", length = 1000)
+    private String reviewComment; // Lời bình luận
+
+    @Column(name = "review_image")
+    private String reviewImage; // Ảnh đánh giá
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     @JsonIgnore // Tạo cột khóa ngoại user_id trong bảng Flower_Orders
     private User user;
+    @OneToMany(mappedBy = "flowerOrder", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<OrderDetail> orderDetails;
 }

@@ -1,12 +1,36 @@
 /* src/main/resources/static/js/index.js */
 
-// --- DỮ LIỆU & BIẾN TOÀN CỤC  ---
+// --- 1. DỮ LIỆU CŨ ---
+const OLD_DATA_BACKUP = [
+    { name: 'Hoa Hồng Đỏ', price: 550000, salePrice: 490000, image: 'images/hoahong.jpg', meaning: 'Biểu tượng của tình yêu nồng cháy.' },
+    { name: 'Hoa Ly Trắng', price: 480000, image: 'images/hoaly.jpg', meaning: 'Tượng trưng cho sự trong trắng, đức hạnh.' },
+    { name: 'Hoa Hướng Dương', price: 450000, image: 'images/hoahuongduong.jpg', meaning: 'Mang ý nghĩa về sự lạc quan, niềm tin.' },
+    { name: 'Hoa Cẩm Tú Cầu', price: 620000, image: 'images/camtucau.jpg', meaning: 'Thể hiện lòng biết ơn chân thành.' },
+    { name: 'Tulip Hà Lan', price: 750000, image: 'images/tulip.jpg', meaning: 'Tượng trưng cho sự giàu có, nổi tiếng.' },
+    { name: 'Hoa Cúc Tana', price: 400000, image: 'images/cuctana.jpg', meaning: 'Nhỏ xinh, mộc mạc, tình yêu thuở ban đầu.' },
+    { name: 'Hoa Baby Trắng', price: 380000, salePrice: 290000, image: 'images/hoababy.jpg', meaning: 'Biểu tượng của tình yêu tinh khiết.' },
+    { name: 'Lan Hồ Điệp', price: 1200000, salePrice: 1000000, image: 'images/lanhodiep.jpg', meaning: 'Sang trọng và quý phái.' },
+    { name: 'Mẫu Đơn Hồng', price: 850000, image: 'images/maudon.jpg', meaning: 'Biểu tượng cho sự thịnh vượng, sắc đẹp.' },
+    { name: 'Oải Hương Khô', price: 420000, image: 'images/oaihuong.jpg', meaning: 'Sự tinh khiết, nhẹ nhàng và tận tâm.' },
+    { name: 'Cẩm Chướng', price: 390000, salePrice: 290000, image: 'images/camchuong.jpg', meaning: 'Niềm tự hào, sắc đẹp và sự ái mộ.' },
+    { name: 'Cúc Họa Mi', price: 350000, image: 'images/cuchoami.jpg', meaning: 'Tình yêu thầm lặng, sự trong trắng.' },
+    { name: 'Hoa Sen Trắng', price: 500000, image: 'images/hoasen.jpg', meaning: 'Sự thanh cao, thuần khiết.' },
+    { name: 'Cát Tường', price: 460000, image: 'images/cattuong.jpg', meaning: 'May mắn, viên mãn và hạnh phúc.' },
+    { name: 'Thạch Thảo Tím', price: 370000, image: 'images/thachthao.jpg', meaning: 'Tình yêu chung thủy, nhớ nhung.' },
+    { name: 'Hoa Rum', price: 580000, image: 'images/rum.jpg', meaning: 'Sự thanh lịch, độc đáo.' },
+    { name: 'Đồng Tiền', price: 410000, image: 'images/dongtien.jpg', meaning: 'Hạnh phúc, tươi vui và tài lộc.' },
+    { name: 'Salem Tím', price: 360000, image: 'images/salem.jpg', meaning: 'Sự trường tồn và nỗi nhớ.' },
+    { name: 'Mõm Sói', price: 430000, image: 'images/momsoi.jpg', meaning: 'Sức mạnh, sự duyên dáng.' },
+    { name: 'Thủy Tiên Trắng', price: 490000, image: 'images/thuytien.jpg', meaning: 'Sự tái sinh, khởi đầu mới.' }
+];
+
+// --- 2. BIẾN TOÀN CỤC ---
+let hoaTuoi = []; // Mảng này chứa dữ liệu tải từ Database
 const bodyBackgrounds = [
     'https://www.toptal.com/designers/subtlepatterns/uploads/watercolor.png', 
     'https://images.pexels.com/photos/2079438/pexels-photo-2079438.jpeg?auto=compress&cs=tinysrgb&w=1920', 
     'https://images.pexels.com/photos/39517/rose-flower-blossom-bloom-39517.jpeg?auto=compress&cs=tinysrgb&w=1920' 
 ];
-
 const bannerBackgrounds = [
     'https://images.unsplash.com/photo-1490750967868-53cbaa379091?q=80&w=2000', 
     'https://images.pexels.com/photos/1166869/pexels-photo-1166869.jpeg?auto=compress&cs=tinysrgb&w=1920', 
@@ -14,36 +38,11 @@ const bannerBackgrounds = [
     'https://images.pexels.com/photos/796620/pexels-photo-796620.jpeg?auto=compress&cs=tinysrgb&w=1920' 
 ];
 
-const hoaTuoi = [
-    { id: 1, name: 'Hoa Hồng Đỏ', price: 550000, salePrice: 490000, image: 'images/hoahong.jpg', meaning: 'Biểu tượng của tình yêu nồng cháy.' },
-    { id: 2, name: 'Hoa Ly Trắng', price: 480000, image: 'images/hoaly.jpg', meaning: 'Tượng trưng cho sự trong trắng, đức hạnh.' },
-    { id: 3, name: 'Hoa Hướng Dương', price: 450000, image: 'images/hoahuongduong.jpg', meaning: 'Mang ý nghĩa về sự lạc quan, niềm tin.' },
-    { id: 4, name: 'Hoa Cẩm Tú Cầu', price: 620000, image: 'images/camtucau.jpg', meaning: 'Thể hiện lòng biết ơn chân thành.' },
-    { id: 5, name: 'Tulip Hà Lan', price: 750000, image: 'images/tulip.jpg', meaning: 'Tượng trưng cho sự giàu có, nổi tiếng.' },
-    { id: 6, name: 'Hoa Cúc Tana', price: 400000, image: 'images/cuctana.jpg', meaning: 'Nhỏ xinh, mộc mạc, tình yêu thuở ban đầu.' },
-    { id: 7, name: 'Hoa Baby Trắng', price: 380000, salePrice: 290000, image: 'images/hoababy.jpg', meaning: 'Biểu tượng của tình yêu tinh khiết.' },
-    { id: 8, name: 'Lan Hồ Điệp', price: 1200000, salePrice: 1000000, image: 'images/lanhodiep.jpg', meaning: 'Sang trọng và quý phái.' },
-    { id: 9, name: 'Mẫu Đơn Hồng', price: 850000, image: 'images/maudon.jpg', meaning: 'Biểu tượng cho sự thịnh vượng, sắc đẹp.' },
-    { id: 10, name: 'Oải Hương Khô', price: 420000, image: 'images/oaihuong.jpg', meaning: 'Sự tinh khiết, nhẹ nhàng và tận tâm.' },
-    { id: 11, name: 'Cẩm Chướng', price: 390000, salePrice: 290000, image: 'images/camchuong.jpg', meaning: 'Niềm tự hào, sắc đẹp và sự ái mộ.' },
-    { id: 12, name: 'Cúc Họa Mi', price: 350000, image: 'images/cuchoami.jpg', meaning: 'Tình yêu thầm lặng, sự trong trắng.' },
-    { id: 13, name: 'Hoa Sen Trắng', price: 500000, image: 'images/hoasen.jpg', meaning: 'Sự thanh cao, thuần khiết.' },
-    { id: 14, name: 'Cát Tường', price: 460000, image: 'images/cattuong.jpg', meaning: 'May mắn, viên mãn và hạnh phúc.' },
-    { id: 15, name: 'Thạch Thảo Tím', price: 370000, image: 'images/thachthao.jpg', meaning: 'Tình yêu chung thủy, nhớ nhung.' },
-    { id: 16, name: 'Hoa Rum', price: 580000, image: 'images/rum.jpg', meaning: 'Sự thanh lịch, độc đáo.' },
-    { id: 17, name: 'Đồng Tiền', price: 410000, image: 'images/dongtien.jpg', meaning: 'Hạnh phúc, tươi vui và tài lộc.' },
-    { id: 18, name: 'Salem Tím', price: 360000, image: 'images/salem.jpg', meaning: 'Sự trường tồn và nỗi nhớ.' },
-    { id: 19, name: 'Mõm Sói', price: 430000, image: 'images/momsoi.jpg', meaning: 'Sức mạnh, sự duyên dáng.' },
-    { id: 20, name: 'Thủy Tiên Trắng', price: 490000, image: 'images/thuytien.jpg', meaning: 'Sự tái sinh, khởi đầu mới.' }
-];
-
 let cart = JSON.parse(localStorage.getItem('shoppingCart')) || [];
-const saveCart = () => {
-    localStorage.setItem('shoppingCart', JSON.stringify(cart));
-};
+const saveCart = () => localStorage.setItem('shoppingCart', JSON.stringify(cart));
 const formatCurrency = (number) => new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(number).replace('₫', 'đ');
 
-// --- CÁC HÀM XỬ LÝ  ---
+// --- 3. CÁC HÀM XỬ LÝ ---
 
 const setRandomBackgrounds = () => {
     const randomBodyBg = bodyBackgrounds[Math.floor(Math.random() * bodyBackgrounds.length)];
@@ -58,9 +57,53 @@ const setRandomBackgrounds = () => {
     }
 };
 
+// Load sản phẩm từ Database
+async function fetchProducts() {
+    try {
+        const response = await fetch('/api/products/all');
+        if (response.ok) {
+            hoaTuoi = await response.json();
+            
+            // Nếu DB trống gợi ý Import
+            if (hoaTuoi.length === 0) {
+                console.log("Database đang trống. Đang tự động import dữ liệu mẫu...");
+                await importSampleData(); // Tự động import
+            } else {
+                renderProducts(); // Vẽ giao diện
+            }
+        }
+    } catch (error) {
+        console.error("Lỗi tải sản phẩm:", error);
+    }
+}
+
+// Tự động nhập 20 sản phẩm mẫu vào DB
+async function importSampleData() {
+    let count = 0;
+    for (const p of OLD_DATA_BACKUP) {
+        try {
+            await fetch('/api/products/create', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(p)
+            });
+            count++;
+        } catch (e) {
+            console.error("Lỗi import:", p.name);
+        }
+    }
+    console.log(`Đã import thành công ${count} sản phẩm!`);
+    window.location.reload();
+}
+
 const renderProducts = () => {
     const productGrid = document.getElementById('product-grid');
     if(!productGrid) return;
+
+    if (hoaTuoi.length === 0) {
+        productGrid.innerHTML = '<p class="text-center w-full text-gray-500">Đang tải sản phẩm...</p>';
+        return;
+    }
 
     productGrid.innerHTML = hoaTuoi.map(product => {
         const priceHTML = product.salePrice
@@ -81,13 +124,14 @@ const renderProducts = () => {
             </div>
             <div class="p-5">
                 <h3 class="text-lg font-bold text-gray-800 mb-1 group-hover:text-pink-600 transition-colors">${product.name}</h3>
-                <p class="text-gray-500 text-sm mb-3 line-clamp-1">${product.meaning}</p>
+                <p class="text-gray-500 text-sm mb-3 line-clamp-1">${product.meaning || 'Loài hoa xinh đẹp'}</p>
                 <div class="flex justify-between items-end">
                     ${priceHTML}
                 </div>
             </div>
         </div>`;
     }).join('');
+    lucide.createIcons();
 };
 
 const renderCart = () => {
@@ -129,7 +173,6 @@ const renderCart = () => {
             </div>`).join('');
     }
     
-    // Cập nhật tổng tiền
     const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
     if(totalPriceElement) totalPriceElement.textContent = formatCurrency(total);
 };
@@ -148,7 +191,14 @@ window.updateQuantity = (cartId, change) => {
 };
 
 window.addToCart = (productId, customName = null) => {
+    // Tìm sản phẩm trong mảng hoaTuoi
     const product = hoaTuoi.find(p => p.id === productId);
+    
+    if (!product) {
+        console.error("Không tìm thấy sản phẩm ID:", productId);
+        return;
+    }
+
     const priceToAdd = product.salePrice || product.price;
     const finalName = customName || product.name;
 
@@ -176,15 +226,15 @@ window.addToCart = (productId, customName = null) => {
         setTimeout(() => cartIcon.parentElement.classList.remove('animate-bounce'), 1000);
     }
 };
+
 // --- MAIN: CHẠY KHI DOM LOAD XONG ---
 document.addEventListener('DOMContentLoaded', () => {
     setRandomBackgrounds();
-    renderProducts();
-    renderCart();
     
-    // Kích hoạt icons
-    lucide.createIcons();
-
+    // Gọi fetchProducts
+    fetchProducts(); 
+    
+    renderCart();
     
     const checkoutBtn = document.getElementById('checkout-button');
     if(checkoutBtn) {

@@ -5,6 +5,7 @@
     import com.tmt.tiem_hoa_tuoi.repository.OrderRepository;
     import com.tmt.tiem_hoa_tuoi.repository.UserRepository;
     import org.springframework.beans.factory.annotation.Autowired;
+    import org.springframework.data.domain.Sort;
     import org.springframework.security.core.Authentication;
     import org.springframework.stereotype.Controller;
     import org.springframework.ui.Model;
@@ -30,7 +31,7 @@
             User user = userRepository.findByUsername(username);
             
             // 3. Lấy danh sách đơn hàng của người này
-            List<FlowerOrder> myOrders = orderRepository.findByUserOrderByOrderDateDesc(user);
+            List<FlowerOrder> myOrders = orderRepository.findByUser(user, Sort.by(Sort.Direction.DESC, "id"));
             
             // 4. Gửi dữ liệu sang HTML
             model.addAttribute("user", user);

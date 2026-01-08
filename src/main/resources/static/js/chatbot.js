@@ -187,7 +187,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 // Tặng Bạn Thân
                 if (text.includes('bạn thân') && (content.includes('baby') || content.includes('cẩm chướng') || content.includes('cúc'))) score += 6;
-
+                
                 
                 // 2. Chấm điểm nếu tên hoa trùng khớp trực tiếp
                 if (text.includes(p.name.toLowerCase())) score += 10; 

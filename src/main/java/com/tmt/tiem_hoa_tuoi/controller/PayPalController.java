@@ -1,9 +1,9 @@
 package com.tmt.tiem_hoa_tuoi.controller;
 
 import com.tmt.tiem_hoa_tuoi.entity.FlowerOrder;
-import com.tmt.tiem_hoa_tuoi.entity.User; 
-import com.tmt.tiem_hoa_tuoi.repository.OrderRepository; 
-import com.tmt.tiem_hoa_tuoi.repository.UserRepository; 
+import com.tmt.tiem_hoa_tuoi.entity.User;
+import com.tmt.tiem_hoa_tuoi.repository.OrderRepository;
+import com.tmt.tiem_hoa_tuoi.repository.UserRepository;
 import com.tmt.tiem_hoa_tuoi.service.EmailService;
 import com.tmt.tiem_hoa_tuoi.service.PayPalService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +16,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
+@CrossOrigin(origins = "*")
 public class PayPalController {
 
     @Autowired
@@ -45,16 +46,17 @@ public class PayPalController {
 
     // API xác nhận thanh toán & Gửi Email
     @PostMapping("/capture-paypal-order")
-    // Thêm Principal để lấy thông tin user đang login
     public ResponseEntity<?> capturePayPalOrder(@RequestBody Map<String, Object> data, Principal principal) {
         try {
             String orderId = (String) data.get("orderID");
             String emailKhachHang = (String) data.get("email");
             String tenKhachHang = (String) data.get("customerName");
-
             Double amount = Double.valueOf(data.get("total").toString());
             String diaChi = (String) data.get("address");
             String sdt = (String) data.get("phone");
+            
+            // NHẬN GHI CHÚ TỪ JS GỬI LÊN
+            String noteFromFrontend = (String) data.get("note"); 
 
             boolean completed = payPalService.captureOrder(orderId);
             
@@ -67,20 +69,20 @@ public class PayPalController {
                     User user = userRepository.findByUsername(username);
                     if (user != null) {
                         order.setUser(user); 
-                        System.out.println("✅ PayPal: Đã gắn đơn hàng cho User: " + username);
                     }
                 }
 
                 order.setCustomerName(tenKhachHang);
                 order.setPhone(sdt);        
                 order.setAddress(diaChi);
-                order.setTotalAmount(amount);
+                order.setTotalAmount(amount); // Lưu giá thực 
                 order.setOrderDate(LocalDateTime.now());
-                
-                // ⚠️ ĐỔI "PAYPAL" THÀNH "DA_THANH_TOAN"
                 order.setStatus("DA_THANH_TOAN"); 
                 
-                order.setNote("Thanh toán PayPal. Mã GD: " + orderId);
+                // Lưu ghi chú kèm mã giao dịch
+                String finalNote = (noteFromFrontend != null ? noteFromFrontend : "") + " (Mã GD PayPal: " + orderId + ")";
+                order.setNote(finalNote);
+                
                 order.setEmail(emailKhachHang); 
 
                 FlowerOrder savedOrder = orderRepository.save(order);
@@ -89,7 +91,6 @@ public class PayPalController {
                 if (emailKhachHang != null && !emailKhachHang.isEmpty()) {
                     emailService.sendOrderConfirmation(emailKhachHang, savedOrder);
                 } else {
-                    // Gửi về Admin nếu khách không điền mail
                     emailService.sendOrderConfirmation("tt3145539@gmail.com", savedOrder);
                 }
 
