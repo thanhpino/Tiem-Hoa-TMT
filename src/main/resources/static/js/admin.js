@@ -277,7 +277,7 @@ async function addProduct() {
     let imageUrl = 'images/hoahong.jpg'; 
 
     if (fileInput.files.length > 0) {
-        statusText.innerText = "Đang upload ảnh lên...";
+        statusText.innerText = "Đang thêm sản phẩm mới...";
         let file = fileInput.files[0];
         let formData = new FormData();
         formData.append("file", file);
@@ -287,14 +287,14 @@ async function addProduct() {
             if (response.ok) {
                 let data = await response.json();
                 imageUrl = data.url; 
-                statusText.innerText = "Upload ảnh thành công!";
+                statusText.innerText = "Thêm sản phẩm mới thành công!";
             } else {
-                alert("Lỗi upload ảnh!");
+                alert("Lỗi thêm sản phẩm!");
                 return;
             }
         } catch (e) {
             console.error(e);
-            alert("Lỗi kết nối server khi upload ảnh!");
+            alert("Lỗi kết nối server khi thêm sản phẩm!");
             return;
         }
     }
