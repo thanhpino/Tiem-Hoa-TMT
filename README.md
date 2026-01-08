@@ -4,133 +4,142 @@
 ![Spring Boot](https://img.shields.io/badge/Spring_Boot-6DB33F?style=for-the-badge&logo=spring-boot&logoColor=white)
 ![Spring Security](https://img.shields.io/badge/Spring_Security-6DB33F?style=for-the-badge&logo=spring-security&logoColor=white)
 ![MySQL](https://img.shields.io/badge/MySQL-005C84?style=for-the-badge&logo=mysql&logoColor=white)
+![TailwindCSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-2CA5E0?style=for-the-badge&logo=docker&logoColor=white)
-![Render](https://img.shields.io/badge/Render-46E3B7?style=for-the-badge&logo=render&logoColor=white)
 
 ## 📖 Giới Thiệu
 
-**Tiệm Hoa TMT** là một giải pháp E-commerce trọn gói dành cho kinh doanh hoa tươi. Hệ thống tích hợp **ChatBot (AI)** để tư vấn, quy trình thanh toán quốc tế (**PayPal**) và hệ thống quản trị vận hành mạnh mẽ.
+**Tiệm Hoa TMT** là giải pháp E-commerce trọn gói được xây dựng với kiến trúc Monolithic hiện đại. Dự án không chỉ là website bán hàng mà là một hệ thống quản lý vận hành khép kín từ khâu đặt hàng, thanh toán quốc tế, chăm sóc khách hàng tự động (AI Chatbot) đến quản lý kho và logistic.
 
-Phiên bản hiện tại đã hoàn thiện quy trình **Authentication (Đăng nhập/Đăng ký)**, quản lý **Hồ sơ khách hàng (Profile)** và **Đồng bộ trạng thái đơn hàng Real-time** giữa Admin và User.
-
----
-
-## 📸 Sản Phẩm
-
-### 1. Phân Hệ Khách Hàng (Customer)
-
-| Trang Chủ & Chatbot AI | Đăng Nhập & Đăng Ký |
-| :---: | :---: |
-| ![Home](src/main/resources/static/images/H1.png) | ![Login](src/main/resources/static/images/H3.png) |
-| *Giao diện hiện đại, Bot tư vấn thông minh* | *Bảo mật với Spring Security* |
-
-| Thanh Toán & Contact | Lịch Sử Đơn Hàng (Profile) |
-| :---: | :---: |
-| ![Checkout](src/main/resources/static/images/H2.png) | ![Profile](src/main/resources/static/images/H6.png) |
-| *Tích hợp PayPal, QR Code, Widget liên hệ* | *Theo dõi trạng thái đơn hàng Real-time* |
-
-### 2. Phân Hệ Quản Trị (Admin)
-
-| Dashboard Thống Kê | Quản Lý Đơn Hàng & Sản Phẩm |
-| :---: | :---: |
-| ![Admin Dashboard](src/main/resources/static/images/H4.png) | ![Product Management](src/main/resources/static/images/H5.png) |
-| *Tổng quan doanh thu, đơn hàng* | *Cập nhật trạng thái, In hóa đơn, Upload ảnh Cloud* |
+> **Điểm nhấn:** Hệ thống tập trung vào trải nghiệm người dùng Real-time và tính năng tương tác cao (Đánh giá, Chatbot, Email Marketing).
 
 ---
 
-## 🚀 Tính Năng Nổi Bật (Key Features)
+## 📸 Giao Diện & Tính Năng
 
-### 👤 1. Trải Nghiệm Người Dùng & Thành Viên
-* **🔐 Authentication & Security:**
-    * Đăng ký/Đăng nhập bảo mật (BCrypt Password Encoding).
-    * Phân quyền chặt chẽ (Role-based: USER vs ADMIN).
-    * Chặn truy cập trái phép vào trang quản trị.
-* **👤 User Profile & History:**
-    * Trang cá nhân hiển thị lịch sử mua hàng.
-    * **Đồng bộ trạng thái:** Khi Admin đổi trạng thái (VD: *Đang giao*), khách hàng thấy ngay lập tức trên trang Profile.
-* **🛒 Giỏ Hàng Thông Minh:**
-    * Lưu trữ LocalStorage (F5 không mất dữ liệu).
-    * Cập nhật số lượng, tính tổng tiền tự động.
+### 1. Phân Hệ Khách Hàng (Storefront)
 
-### 🤖 2. Trợ Lý Ảo & Hỗ Trợ
-* **AI Florist Chatbot:**
-    * Phân tích nhu cầu (Tặng sinh nhật, Tỏ tình, Ngân sách...).
-    * Gợi ý sản phẩm kèm hình ảnh và giá ngay trong khung chat.
-    * Hoạt động xuyên suốt các trang (Trang chủ, Thanh toán, Profile).
-* **📞 Widget Contact Đa Kênh:**
-    * Nút gọi điện/Zalo/Facebook tích hợp sẵn, hiển thị mọi lúc mọi nơi.
+| Trang Chủ & AI Chatbot | Chi Tiết Đơn Hàng (Modal) |
+| :---: | :---: |
+| ![Home](src/main/resources/static/images/H1.png) | ![Order Detail](src/main/resources/static/images/H2.png) |
+| *Bot tư vấn theo ngữ cảnh, gợi ý sản phẩm* | *Xem lại lịch sử, chi tiết từng món hàng* |
 
-### 💳 3. Thanh Toán & Đơn Hàng
-* **Phương Thức Đa Dạng:**
-    * **PayPal:** Tích hợp API thật, tự động cập nhật trạng thái "Đã thanh toán".
-    * **QR Code:** Giả lập quét mã Momo/ZaloPay.
+| Đánh Giá & Review | Thanh Toán & Checkout |
+| :---: | :---: |
+| ![Review](src/main/resources/static/images/H5.png) | ![Checkout](src/main/resources/static/images/H3.png) |
+| *Rating 5 sao, upload ảnh thực tế* | *Tích hợp PayPal, QR Code, COD* |
+
+### 2. Phân Hệ Quản Trị (Admin Dashboard)
+
+| Tổng Quan & Real-time | Quản Lý Đơn & In Hóa Đơn |
+| :---: | :---: |
+| ![Dashboard](src/main/resources/static/images/H6.png) | ![Invoice](src/main/resources/static/images/H7.png) |
+| *Biểu đồ doanh thu, cập nhật đơn mới 3s/lần* | *Xuất hóa đơn bán lẻ chuyên nghiệp* |
+
+---
+
+## 🚀 (Feature List)
+
+### 👤 1. Dành Cho Khách Hàng (Customer)
+* **🔐 Authentication:** Đăng ký/Đăng nhập bảo mật, mã hóa mật khẩu BCrypt.
+* **🛒 Giỏ Hàng Thông Minh:** Lưu trữ LocalStorage, tự động tính tổng tiền, thêm/sửa/xóa mượt mà.
+* **💳 Thanh Toán Đa Kênh:**
+    * **PayPal:** Tích hợp cổng thanh toán quốc tế.
+    * **Chuyển khoản:** Quét mã QR tự động điền nội dung.
     * **COD:** Thanh toán khi nhận hàng.
-* **Email Automation:** Tự động gửi Email xác nhận chi tiết đơn hàng ngay khi đặt thành công.
+* **👤 Quản Lý Cá Nhân (User Profile):**
+    * Chỉnh sửa thông tin cá nhân (Tên, SĐT, Địa chỉ).
+    * **Lịch sử đơn hàng:** Xem danh sách đơn đã đặt, trạng thái đơn (Mới tạo, Đang giao...).
+    * **Xem chi tiết:** Modal hiển thị rõ ràng từng sản phẩm trong đơn hàng cũ.
+* **⭐ Hệ Thống Đánh Giá (Review System):**
+    * Cho phép đánh giá sao (1-5) cho đơn hàng đã hoàn thành.
+    * Viết bình luận và **Upload ảnh thực tế** lên Cloudinary.
+* **🤖 Trợ Lý Ảo AI:** Chatbot tư vấn chọn hoa theo dịp (Sinh nhật, Tỏ tình) và ngân sách.
 
-### 🛡️ 4. Hệ Thống Quản Trị (Admin)
-* **Cloud Storage:** Upload ảnh sản phẩm lên **Cloudinary**, giảm tải cho server.
-* **Order Management:**
-    * Xem danh sách, tìm kiếm đơn hàng.
-    * Đổi trạng thái đơn (Mới tạo -> Đã thanh toán -> Đang giao -> Hoàn thành).
-    * **In hóa đơn:** Xuất hóa đơn bán lẻ trực tiếp.
+### 🛡️ 2. Dành Cho Quản Trị Viên (Admin)
+* **📊 Dashboard Real-time:**
+    * Tự động đổ chuông thông báo khi có đơn hàng mới (không cần F5).
+    * Biểu đồ doanh thu trực quan.
+* **📦 Quản Lý Sản Phẩm:**
+    * Thêm/Sửa/Xóa hoa tươi.
+    * Upload ảnh sản phẩm trực tiếp lên Cloudinary.
+* **📝 Quản Lý Đơn Hàng:**
+    * Cập nhật trạng thái đơn hàng (Đồng bộ ngay lập tức sang phía khách).
+    * **In hóa đơn:** Tạo phiếu in hóa đơn chi tiết chỉ với 1 click.
+    * Xem phản hồi/đánh giá từ khách hàng.
+
+### 📧 3. Hệ Thống Tự Động (Automation)
+* **Email Marketing:** Gửi Email xác nhận đơn hàng chuẩn HTML (kèm danh sách sản phẩm, tổng tiền) ngay khi đặt hàng thành công.
 
 ---
 
 ## 🛠️ Công Nghệ Sử Dụng (Tech Stack)
 
-| Lĩnh Vực | Công Nghệ | Mô Tả |
-| :--- | :--- | :--- |
-| **Backend** | Java 21, Spring Boot 3.x | Core framework mạnh mẽ. |
-| **Security** | Spring Security | Quản lý xác thực và phân quyền. |
-| **Database** | MySQL / PostgreSQL | Lưu trữ dữ liệu (Local & Cloud). |
-| **ORM** | Spring Data JPA, Hibernate | Giao tiếp Database. |
-| **Frontend** | Thymeleaf, HTML5, TailwindCSS | Giao diện Responsive. |
-| **Scripting** | **Vanilla JS (Modular)** | Cấu trúc JS tách biệt (`admin.js`, `chatbot.js`, `contact.js`...). |
-| **Cloud** | Cloudinary API | Lưu trữ hình ảnh. |
-| **DevOps** | Docker, GitHub Actions, Render | CI/CD Pipeline & Deployment. |
+### Backend
+* **Core:** Java 21, Spring Boot 3.x
+* **Security:** Spring Security (Phân quyền User/Admin).
+* **Database:** MySQL (Production trên Aiven Cloud), JPA/Hibernate.
+* **Services:** * `JavaMailSender` .
+    * `Cloudinary SDK` .
+    * `PayPal SDK`.
+
+### Frontend
+* **Template Engine:** Thymeleaf.
+* **Styling:** TailwindCSS, FontAwesome, Google Fonts.
+* **Logic:** Vanilla JavaScript.
+* **Icons:** Lucide Icons.
+
+### DevOps & Deployment
+* **Docker:** Đóng gói ứng dụng (Dockerfile).
+* **Render:** Nền tảng Deploy ứng dụng.
+* **Maven:** Quản lý phụ thuộc.
 
 ---
 
-## 📂 Cấu Trúc Dự Án (Modular Architecture)
+## ⚙️ Hướng Dẫn Cài Đặt (Setup Guide)
 
-Dự án được tổ chức theo mô hình MVC, tách biệt rõ ràng giữa Static Resources (JS/CSS) và Templates.
+### 1. Yêu Cầu
+* JDK 21+
+* Maven
+* MySQL Workbench
 
-```plaintext
-TIEM-HOA-TUOI
-├── src/main/java/com/tmt/tiem_hoa_tuoi
-│   ├── config       # SecurityConfig, WebConfig
-│   ├── controller   # AuthController, OrderController, PayPalController, AdminController...
-│   ├── entity       # User, FlowerOrder, Product...
-│   ├── repository   # JPA Interfaces
-│   └── service      # EmailService, PayPalService, CloudinaryService
-├── src/main/resources
-│   ├── static       # Tài nguyên tĩnh (Public)
-│   │   ├── css      # admin.css, index.css, thanhtoan.css (Separated Styles)
-│   │   ├── js       # admin.js, chatbot.js, contact.js, index.js (Modular JS)
-│   │   ├── images   # Assets
-│   │   └── asset    # Âm thanh thông báo
-│   ├── templates    # Giao diện (Thymeleaf)
-│   │   ├── admin.html
-│   │   ├── index.html
-│   │   ├── login.html
-│   │   ├── register.html
-│   │   ├── profile.html
-│   │   └── thanhtoan.html
-│   └── application.properties
-├── Dockerfile       # Containerization
-├── docker-compose.yml
-└── pom.xml
+### 2. Cấu Hình Biến Môi Trường
+Tạo file `.env` hoặc cấu hình trong IDE với các thông số sau:
 
+```properties
+# Database
+DB_URL=jdbc:mysql://localhost:3306/FlowerShopDB
+DB_USER=root
+DB_PASSWORD=your_password
+
+# Cloudinary
+CLOUDINARY_CLOUD_NAME=your_cloud_name
+CLOUDINARY_API_KEY=your_api_key
+CLOUDINARY_API_SECRET=your_api_secret
+
+# Email
+MAIL_USERNAME=your_email@gmail.com
+MAIL_PASSWORD=your_app_password
+
+# PayPal
+PAYPAL_CLIENT_ID=your_paypal_client_id
+PAYPAL_CLIENT_SECRET=your_paypal_secret
+
+# Clone dự án
+git clone [https://github.com/thanhpino/tiem-hoa-tmt.git](https://github.com/thanhpino/tiem-hoa-tmt.git)
+
+# Build dự án
+mvn clean install
+
+# Chạy
+mvn spring-boot:run
 
 👨‍💻 Tác Giả
 Trương Minh Thành
 
-Sinh viên Kỹ Thuật Phần Mềm - Năm 2
+Sinh viên Kỹ Thuật Phần Mềm - TDTU(2)
 
-Đam mê: Cloud Engineering, DevOps, Full-stack Java.
-
-GitHub: github.com/thanhpino
-
+Đam mê: DevOps, Full-stack Java.
 Email: tt3145539@gmail.com
-
-Project made with ❤️ and lots of coffee.
+GitHub: thanhpino
+Project made with ❤️, lots of coffee and bugs fixing. ☕🐛
